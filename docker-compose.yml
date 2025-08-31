@@ -1,0 +1,16 @@
+services:
+  portfolio:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: portfolio-web:latest
+    ports:
+      - "2011:80"
+    networks:
+      - portfolio_network
+    restart: unless-stopped
+
+networks:
+  portfolio_network:
+    name: portfolio_network
+    driver: bridge

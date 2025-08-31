@@ -1,22 +1,74 @@
+---
+import '../styles/global.css'
+import Header from '../components/compose/Header.astro'
+// Props para personalizar meta por página
+export interface Props {
+  title?: string
+  description?: string
+  image?: string
+  url?: string
+}
+export let title: string = "SebasDev Portfolio"
+export let description: string = "Portafolio de SebasDev — desarrollador de software. Proyectos, blog y contacto."
+export let image: string = "https://res.cloudinary.com/ddclkt7n4/image/upload/v1756683599/Generated_Image_August_31_2025_-_12_21PM_1_khdzwx.jpg" // poner la imagen en /public/images/og-image.jpg
+export let url: string = "https://portfolio.kysedomi.lat" // actualiza con tu dominio
+---
+
+
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<meta name="generator" content={Astro.generator} />
-		<title>Astro Basics</title>
-	</head>
-	<body>
-		<slot />
-	</body>
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <meta name="generator" content={Astro.generator} />
+        <title>SebasDev Portfolio</title>
+
+        <meta name="description" content={description} />
+        <link rel="canonical" href={url} />
+        <meta name="robots" content="index, follow" />
+
+        <!-- Open Graph (Facebook, WhatsApp, Messenger, etc.) -->
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content={title} />
+        <meta property="og:description" content={description} />
+        <meta property="og:image" content={image} />
+        <meta property="og:image:width" content="940" />
+        <meta property="og:image:height" content="520" />
+        <meta property="og:url" content={url} />
+        <meta property="og:site_name" content="SebasDev" />
+
+        <!-- Twitter -->
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:title" content={title} />
+        <meta name="twitter:description" content={description} />
+        <meta name="twitter:image" content={image} />
+
+
+
+    </head>
+    <body class="text-white">
+        <!-- Header en contenedor 70% -->
+        <div class="w-[70%] mx-auto h-0">
+            <Header />
+        </div>
+
+        <!-- Slot full-width para secciones como hero -->
+        <slot name="full" />
+
+        <!-- Contenido normal (70% centrado) -->
+        <div class="w-[70%] mx-auto">
+            <slot />
+        </div>
+    </body>
 </html>
 
 <style>
-	html,
-	body {
-		margin: 0;
-		width: 100%;
-		height: 100%;
-	}
+    html,
+    body {
+		background-color: black;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
 </style>

@@ -1,0 +1,154 @@
+---
+
+//Languajes SVG
+import cplusplus from '../../assets/language/cplusplus.svg';
+import csharp from '../../assets/language/csharp.svg';
+import javascript from '../../assets/language/javascript.svg';
+import kotlin from '../../assets/language/kotlin.svg';
+import python from '../../assets/language/python.svg';
+import php from '../../assets/language/php-6.svg';
+import swift from '../../assets/language/swift.svg';
+import typescript from '../../assets/language/typescript.svg';
+
+// Frameworks SVG
+import adonisjs from '../../assets/frameworks/adonisjs.svg';
+import angular from '../../assets/frameworks/angular.svg';
+import django from '../../assets/frameworks/django.svg';
+import fastapi from '../../assets/frameworks/fastapi.svg';
+import laravel from '../../assets/frameworks/laravel.svg';
+import platformio from '../../assets/frameworks/platformio.svg';
+import react from '../../assets/frameworks/react.svg';
+import vue from '../../assets/frameworks/vue.svg';
+
+
+// tools
+
+import aws from '../../assets/tools/aws.svg';
+import docker from '../../assets/tools/docker.svg';
+import github from '../../assets/tools/github.svg';
+import linux from '../../assets/tools/linux.svg';
+import mongo from '../../assets/tools/mongo.svg';
+import bash from '../../assets/tools/bash.svg';
+import postman from '../../assets/tools/postman.svg';
+import postgresql from '../../assets/tools/postgresql.svg';
+
+const languages = [
+  { name: 'Python', src: python.src },
+  { name: 'JavaScript', src: javascript.src },
+  { name: 'TypeScript', src: typescript.src },
+  { name: 'Kotlin', src: kotlin.src },
+  { name: 'C#', src: csharp.src },
+  { name: 'C++', src: cplusplus.src },
+  { name: 'PHP', src: php.src },
+  { name: 'Swift', src: swift.src },
+];
+
+const frameworks = [
+  { name: 'AdonisJS', src: adonisjs.src },
+  { name: 'Angular', src: angular.src },
+  { name: 'Django', src: django.src },
+  { name: 'FastAPI', src: fastapi.src },
+  { name: 'Laravel', src: laravel.src },
+  { name: 'PlatformIO', src: platformio.src },
+  { name: 'React', src: react.src },
+  { name: 'Vue', src: vue.src },
+];
+
+const tools = [
+  { name: 'AWS', src: aws.src },
+  { name: 'Docker', src: docker.src },
+  { name: 'GitHub', src: github.src },
+  { name: 'Linux', src: linux.src },
+  { name: 'MongoDB', src: mongo.src },
+  { name: 'Bash', src: bash.src },
+  { name: 'Postman', src: postman.src },
+  { name: 'PostgreSQL', src: postgresql.src },
+];
+---
+
+
+
+<section class="py-12 px-6  text-gray-100" id="about-me">
+  
+  <div class="flex flex-col md:flex-row gap-10 items-center">
+    <!-- Texto -->
+    <div class="md:w-1/2">
+      <h3 class="text-3xl font-bold text-indigo-400 pb-5" >Sobre mí</h3>
+      <div class="prose prose-invert text-[19px] max-w-none leading-relaxed">
+        <p class="mb-6">
+          Soy <span class="font-semibold text-indigo-300">Sebastián Rodríguez Contreras</span>, estudiante de la 
+          <span class="italic">Ingeniería en Tecnologías de la Información e Innovación Digital</span> en la 
+          Universidad Tecnológica de Torreón. Actualmente he concluido el 
+          <span class="font-medium">TSU en Desarrollo de Software Multiplataforma</span>, lo que me ha dado una base 
+          sólida en programación, desarrollo de sistemas y gestión de proyectos tecnológicos.
+        </p>
+
+        <p class="mb-6">
+          Durante mi trayectoria he adquirido experiencia en 
+          <span class="font-semibold">desarrollo web y móvil</span>, 
+          <span class="font-semibold">integración de sistemas IoT</span>, 
+          <span class="font-semibold">administración de servidores Linux</span>, 
+          despliegue en la nube con <span class="text-indigo-300">AWS</span> y uso de 
+          <span class="text-indigo-300">Docker</span> para entornos de producción. 
+          Tengo la capacidad de diseñar, implementar y mantener soluciones completas que 
+          combinan software, infraestructura y buenas prácticas de desarrollo.
+        </p>
+
+        <p>
+          Actualmente busco la oportunidad de realizar mis 
+          <span class="font-medium text-indigo-300">prácticas profesionales</span>, con el objetivo de llevar mi 
+          conocimiento y pasión al siguiente nivel: ver cómo mis ideas generan impacto en el mundo real. 
+          Para mí, programar no solo es crear software, sino construir soluciones que transformen la 
+          manera en que las personas interactúan con la tecnología.
+        </p>
+      </div>
+    </div>
+
+    <!-- Logos -->
+    <div class="md:w-1/2 flex flex-col items-center">
+      <h4 class="text-xl font-semibold mb-6 text-indigo-300">Lenguajes y Tecnologías</h4>
+
+      <!-- Cambiado: ahora 3 filas apiladas (cada una es una "card" full-width) -->
+      <div class="w-full flex flex-col gap-4">
+        <!-- Lenguajes (fila 1) -->
+        <div class="w-full bg-gray-800/30 rounded-lg p-4">
+          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">Lenguajes</h5>
+          <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
+            {languages.map((lang) => (
+              <figure class="flex flex-col items-center gap-2 text-center" title={lang.name}>
+                <img src={lang.src} alt={lang.name} class="w-12 h-12 object-contain transition-transform transform hover:scale-110" />
+                <figcaption class="text-xs text-gray-300">{lang.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+
+        <!-- Frameworks (fila 2) -->
+        <div class="w-full bg-gray-800/30 rounded-lg p-4">
+          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">Frameworks</h5>
+          <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
+            {frameworks.map((fw) => (
+              <figure class="flex flex-col items-center gap-2 text-center" title={fw.name}>
+                <img src={fw.src} alt={fw.name} class="w-12 h-12 object-contain transition-transform transform hover:scale-110" />
+                <figcaption class="text-xs text-gray-300">{fw.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+
+        <!-- Herramientas (fila 3) -->
+        <div class="w-full bg-gray-800/30 rounded-lg p-4">
+          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">Herramientas</h5>
+          <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
+            {tools.map((tool) => (
+              <figure class="flex flex-col items-center gap-2 text-center" title={tool.name}>
+                <img src={tool.src} alt={tool.name} class="w-12 h-12 object-contain transition-transform transform hover:scale-110" />
+                <figcaption class="text-xs text-gray-300">{tool.name}</figcaption>
+              </figure>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
