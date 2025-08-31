@@ -6,12 +6,12 @@ export interface Props {
   title?: string
   description?: string
   image?: string
-  url?: string
+  pageUrl?: string
 }
 export let title: string = "SebasDev Portfolio"
 export let description: string = "Portafolio de SebasDev — desarrollador de software. Proyectos, blog y contacto."
 export let image: string = "https://res.cloudinary.com/ddclkt7n4/image/upload/v1756683599/Generated_Image_August_31_2025_-_12_21PM_1_khdzwx.jpg" // poner la imagen en /public/images/og-image.jpg
-export let url: string = "https://portfolio.kysedomi.lat" // actualiza con tu dominio
+export let pageUrl: string = "https://portfolio.kysedomi.lat" // actualiza con tu dominio
 ---
 
 
@@ -25,7 +25,7 @@ export let url: string = "https://portfolio.kysedomi.lat" // actualiza con tu do
         <title>SebasDev Portfolio</title>
 
         <meta name="description" content={description} />
-        <link rel="canonical" href={url} />
+        <link rel="canonical" href={pageUrl} />
         <meta name="robots" content="index, follow" />
 
         <!-- Open Graph (Facebook, WhatsApp, Messenger, etc.) -->
@@ -35,7 +35,7 @@ export let url: string = "https://portfolio.kysedomi.lat" // actualiza con tu do
         <meta property="og:image" content={image} />
         <meta property="og:image:width" content="940" />
         <meta property="og:image:height" content="520" />
-        <meta property="og:url" content={url} />
+        <meta property="og:url" content={pageUrl} />
         <meta property="og:site_name" content="SebasDev" />
 
         <!-- Twitter -->
