@@ -1,13 +1,20 @@
 ---
+import { type Language, DEFAULT_LANGUAGE } from '../../utils/i18n';
+import { useTranslations } from '../../utils/translations';
+
 interface Props {
   title?: string;
   description?: string;
   technologies?: string[];
   imageUrl?: string;
   path?: string;
+  lang?: Language;
 }
 
-const {title = "Rifas DMR - Sorteos Online", description = "Plataforma de rifas en línea que ofrece sorteos emocionantes", technologies = [
+const {
+  title = "Rifas DMR - Sorteos Online", 
+  description = "Plataforma de rifas en línea que ofrece sorteos emocionantes", 
+  technologies = [
     "AdonisJS",
     "Astro",
     "Angular",
@@ -17,9 +24,15 @@ const {title = "Rifas DMR - Sorteos Online", description = "Plataforma de rifas 
     "Node",
     "Postgres",
     "Mongo",
-  ], imageUrl = "https://res.cloudinary.com/ddclkt7n4/image/upload/v1756173052/LogoDMR_1_xwxomr.jpg", path = ''} = Astro.props;
+  ], 
+  imageUrl = "https://res.cloudinary.com/ddclkt7n4/image/upload/v1756173052/LogoDMR_1_xwxomr.jpg", 
+  path = '',
+  lang = DEFAULT_LANGUAGE
+} = Astro.props;
+
+const t = useTranslations(lang);
 ---
-<a href={`projects/${path}`} class="block group">
+<a href={path} class="block group">
     <section class="w-[320px] flex-shrink-0 transition-transform duration-300 hover:-translate-y-1 relative">
         <div class="w-full h-full rounded-2xl overflow-hidden bg-gray-800/30">
             <div class="h-[180px] overflow-hidden">

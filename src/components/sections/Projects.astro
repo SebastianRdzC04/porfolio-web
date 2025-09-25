@@ -1,12 +1,21 @@
 ---
 import ProjectCard from '../compose/ProjectCard.astro';
 import { getCollection } from 'astro:content';
+import { getContentByLanguage, type Language, DEFAULT_LANGUAGE, getLocalizedPath } from '../../utils/i18n';
+import { useTranslations } from '../../utils/translations';
 
-const projects = await getCollection("projects");
+interface Props {
+  lang?: Language;
+}
+
+const { lang = DEFAULT_LANGUAGE } = Astro.props;
+const allProjects = await getCollection("projects");
+const projects = getContentByLanguage(allProjects, lang);
+const t = useTranslations(lang);
 ---
 
 <section id="projects" class=" py-12 px-4">
-    <h3 class="text-3xl font-bold mb-8 text-center text-indigo-400">Mis Proyectos</h3>
+    <h3 class="text-3xl font-bold mb-8 text-center text-indigo-400">{t('projects.title')}</h3>
     
     <div class="projects-container overflow-x-auto pb-4">
         <div class="flex gap-6 min-w-max">
@@ -14,8 +23,17 @@ const projects = await getCollection("projects");
                 projects.map(project => {
                     const {slug, data} = project;
                     const {title, description, technologies, imageUrl, path} = data;
+                    // Generar la ruta correcta según el idioma
+                    const projectPath = lang === 'es' ? `/projects/${path}` : `/en/projects/${path}`;
                     return (
-                        <ProjectCard title={title} description={description} technologies={technologies} imageUrl={imageUrl} path={path} />
+                        <ProjectCard 
+                            title={title} 
+                            description={description} 
+                            technologies={technologies} 
+                            imageUrl={imageUrl} 
+                            path={projectPath}
+                            lang={lang}
+                        />
                     )
                 })
             }

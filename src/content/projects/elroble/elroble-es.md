@@ -5,6 +5,7 @@ technologies: ["Laravel", "Blade", "Mysql"]
 githubUrl: https://github.com/SebastianRdzC04/Integradora-ElRoble.git
 imageUrl: elroble.png
 path: el-roble-eventos
+lang: es
 ---
 
 # El Roble Eventos – Sistema de Administración de Eventos

@@ -1,15 +1,45 @@
 ---
+import { type Language, DEFAULT_LANGUAGE, getLanguageFromURL } from '../../utils/i18n';
+import { useTranslations } from '../../utils/translations';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = DEFAULT_LANGUAGE } = Astro.props;
+const t = useTranslations(lang);
+
+// Función para generar URLs según el idioma
+function getLocalizedUrl(path: string, language: Language): string {
+  if (language === DEFAULT_LANGUAGE) {
+    return path;
+  }
+  return `/en${path}`;
+}
+
 const navItems = [
-    { title: "Home", url: "/" },
-    { title: "Sobre Mi", url: "/#about-me" },
-    { title: "Projects", url: "/#projects" },
-    { title: "Contact", url: "/#contact" }
+    { 
+      titleKey: "nav.home" as keyof typeof import('../../utils/translations').ui['es'],
+      url: getLocalizedUrl("/", lang)
+    },
+    { 
+      titleKey: "nav.about" as keyof typeof import('../../utils/translations').ui['es'],
+      url: getLocalizedUrl("/#about-me", lang)
+    },
+    { 
+      titleKey: "nav.projects" as keyof typeof import('../../utils/translations').ui['es'],
+      url: getLocalizedUrl("/#projects", lang)
+    },
+    { 
+      titleKey: "nav.contact" as keyof typeof import('../../utils/translations').ui['es'],
+      url: getLocalizedUrl("/#contact", lang)
+    }
 ];
 ---
 
 <div class="mobile-menu-container block md:hidden">
     <!-- Hamburger Button -->
-    <button id="mobile-menu-button" class="flex flex-col justify-center items-center w-8 h-8 md:hidden" aria-label="Menu">
+    <button id="mobile-menu-button" class="hamburger-btn flex flex-col justify-center items-center w-8 h-8" aria-label="Menu">
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
         <span class="hamburger-line"></span>
@@ -19,7 +49,7 @@ const navItems = [
     <div id="mobile-sidebar" class="fixed top-0 right-0 w-64 h-screen bg-black/89 transform translate-x-full transition-transform duration-300 ease-in-out z-50 backdrop-blur-lg">
         <div class="flex flex-col p-5 h-full">
             <!-- Close button -->
-            <button id="close-sidebar-button" class="flex flex-col justify-center items-center w-8 h-8 ml-auto" aria-label="Close Menu">
+            <button id="close-sidebar-button" class="hamburger-btn flex flex-col justify-center items-center w-8 h-8 ml-auto" aria-label="Close Menu">
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
                 <span class="hamburger-line"></span>
@@ -29,14 +59,14 @@ const navItems = [
             <nav class="flex flex-col space-y-4">
                 {navItems.map((item) => (
                     <a href={item.url} class="text-white text-xl py-2 hover:text-emerald-400 transition-colors duration-300">
-                        {item.title}
+                        {t(item.titleKey)}
                     </a>
                 ))}
             </nav>
         </div>
     </div>
     
-    <!-- Overlay to close sidebar when clicked outside - placed outside the md:hidden container -->
+    <!-- Overlay to close sidebar when clicked outside -->
     <div id="overlay" class="fixed inset-0 bg-black opacity-0 pointer-events-none transition-opacity duration-300 z-40"></div>
 </div>
 
@@ -63,97 +93,123 @@ const navItems = [
     }
 </style>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
+<script is:inline>
+    // Reinicializar el menú móvil
+    function initMobileMenu() {
         const menuButton = document.getElementById('mobile-menu-button');
         const sidebar = document.getElementById('mobile-sidebar');
         const closeButton = document.getElementById('close-sidebar-button');
         const overlay = document.getElementById('overlay');
-        const navLinks = document.querySelectorAll('#mobile-sidebar nav a');
+        
+        if (!menuButton || !sidebar || !closeButton || !overlay) {
+            setTimeout(initMobileMenu, 100);
+            return;
+        }
         
         let isMenuOpen = false;
-
-        if (sidebar && menuButton && closeButton && overlay) {
-            function openMenu() {
-                sidebar!.classList.remove('translate-x-full');
-                menuButton!.classList.add('menu-open');
-                closeButton!.classList.add('menu-open');
-                overlay!.classList.add('opacity-50');
-                overlay!.classList.remove('pointer-events-none');
-                document.body.style.overflow = 'hidden';
-                isMenuOpen = true;
-            }
-    
-            function closeMenu() {
-                sidebar!.classList.add('translate-x-full');
-                menuButton!.classList.remove('menu-open');
-                closeButton!.classList.remove('menu-open');
-                overlay!.classList.remove('opacity-50');
-                overlay!.classList.add('pointer-events-none');
-                document!.body.style.overflow = '';
-                isMenuOpen = false;
-            }
-    
-            function toggleMenu() {
-                if (isMenuOpen) {
-                    closeMenu();
-                } else {
-                    openMenu();
-                }
-            }
-    
-            // Event listeners with debugging
-            menuButton.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent event bubbling
-                toggleMenu();
-            });
-            
-            closeButton.addEventListener('click', (e) => {
-                e.stopPropagation(); // Prevent event bubbling
-                closeMenu();
-            });
-            
-            // Make overlay explicitly handle both click and touch events
-            overlay.addEventListener('click', (e) => {
-                e.stopPropagation();
-                closeMenu();
-                console.log('Overlay clicked');
-            });
-            
-            overlay.addEventListener('touchstart', (e) => {
-                e.preventDefault();
-                closeMenu();
-                console.log('Overlay touched');
-            });
-            
-            // Prevent clicks on the sidebar from closing the menu
-            sidebar.addEventListener('click', (e) => {
-                e.stopPropagation();
-            });
-            
-            // Close menu when clicking navigation links
-            navLinks.forEach(link => {
-                link.addEventListener('click', closeMenu);
-            });
-            
-            // Global document click handler as fallback
-            document.addEventListener('click', (e) => {
-                const target = e.target as Node;
-                if (isMenuOpen && !sidebar.contains(target) && target !== menuButton) {
-                    closeMenu();
-                    console.log('Document clicked outside sidebar');
-                }
-            });
-            
-            // Add event listener for ESC key
-            document.addEventListener('keydown', (e) => {
-                if (e.key === 'Escape' && isMenuOpen) {
-                    closeMenu();
-                }
-            });
-
+        
+        function openMenu() {
+            if (!sidebar || !menuButton || !closeButton || !overlay) return;
+            sidebar.classList.remove('translate-x-full');
+            menuButton.classList.add('menu-open');
+            closeButton.classList.add('menu-open');
+            overlay.classList.add('opacity-50');
+            overlay.classList.remove('pointer-events-none');
+            document.body.style.overflow = 'hidden';
+            isMenuOpen = true;
         }
+        
+        function closeMenu() {
+            if (!sidebar || !menuButton || !closeButton || !overlay) return;
+            sidebar.classList.add('translate-x-full');
+            menuButton.classList.remove('menu-open');
+            closeButton.classList.remove('menu-open');
+            overlay.classList.remove('opacity-50');
+            overlay.classList.add('pointer-events-none');
+            document.body.style.overflow = '';
+            isMenuOpen = false;
+        }
+        
+        // Eliminar listeners previos
+        const newMenuButton = menuButton.cloneNode(true);
+        const newCloseButton = closeButton.cloneNode(true);
+        
+        if (menuButton.parentNode) menuButton.parentNode.replaceChild(newMenuButton, menuButton);
+        if (closeButton.parentNode) closeButton.parentNode.replaceChild(newCloseButton, closeButton);
+        
+        const updatedMenuButton = document.getElementById('mobile-menu-button');
+        const updatedCloseButton = document.getElementById('close-sidebar-button');
+        
+        // Re-añadir event listeners
+        if (updatedMenuButton) {
+            updatedMenuButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                if (isMenuOpen) closeMenu(); else openMenu();
+            });
+        }
+        
+        if (updatedCloseButton) {
+            updatedCloseButton.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                closeMenu();
+            });
+        }
+        
+        overlay.addEventListener('click', function() {
+            closeMenu();
+        });
+        
+        overlay.addEventListener('touchstart', function(e) {
+            e.preventDefault();
+            closeMenu();
+        });
+        
+        sidebar.addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+        
+        const navLinks = document.querySelectorAll('#mobile-sidebar nav a');
+        navLinks.forEach(function(link) {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && isMenuOpen) {
+                closeMenu();
+            }
+        });
+    }
 
+    // Inicializar al cargar
+    document.addEventListener('DOMContentLoaded', function() {
+        initMobileMenu();
     });
+    
+    // Detectar cambios de idioma
+    window.addEventListener('storage', function(e) {
+        if (e.key === 'languageChanged') {
+            setTimeout(initMobileMenu, 200);
+        }
+    });
+    
+    // Comprobar si hubo un cambio de idioma
+    if (localStorage.getItem('languageChanged') === 'true') {
+        localStorage.removeItem('languageChanged');
+        setTimeout(function() {
+            initMobileMenu();
+        }, 300);
+    }
+    
+    // Soporte para Astro View Transitions
+    if (document.addEventListener) {
+        document.addEventListener('astro:page-load', function() {
+            setTimeout(initMobileMenu, 0);
+        });
+        
+        document.addEventListener('astro:after-swap', function() {
+            setTimeout(initMobileMenu, 0);
+        });
+    }
 </script>
-

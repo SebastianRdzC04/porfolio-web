@@ -1,14 +1,48 @@
 ---
+import { type Language, DEFAULT_LANGUAGE } from '../../utils/i18n';
+import { useTranslations } from '../../utils/translations';
 
+interface Props {
+  lang?: Language;
+}
+
+const { lang = DEFAULT_LANGUAGE } = Astro.props;
+const t = useTranslations(lang);
+
+// Función para generar URLs según el idioma
+function getLocalizedUrl(path: string, language: Language): string {
+  if (language === DEFAULT_LANGUAGE) {
+    return path;
+  }
+  return `/en${path}`;
+}
+
+const navItems = [
+    { 
+      titleKey: "nav.home" as keyof typeof import('../../utils/translations').ui['es'],
+      url: getLocalizedUrl("/", lang)
+    },
+    { 
+      titleKey: "nav.about" as keyof typeof import('../../utils/translations').ui['es'],
+      url: getLocalizedUrl("/#about-me", lang)
+    },
+    { 
+      titleKey: "nav.projects" as keyof typeof import('../../utils/translations').ui['es'],
+      url: getLocalizedUrl("/#projects", lang)
+    },
+    { 
+      titleKey: "nav.contact" as keyof typeof import('../../utils/translations').ui['es'],
+      url: getLocalizedUrl("/#contact", lang)
+    }
+];
 ---
 
 <div>
     <nav>
         <ul class="flex gap-10">
-            <li><a href="/">Inicio</a></li>
-            <li><a href="/#about-me">Sobre Mi</a></li>
-            <li><a href="/#projects">Proyectos</a></li>
-            <li><a href="/#contact">Contacto</a></li>
+            {navItems.map((item) => (
+                <li><a href={item.url}>{t(item.titleKey)}</a></li>
+            ))}
         </ul>
     </nav>
 </div>

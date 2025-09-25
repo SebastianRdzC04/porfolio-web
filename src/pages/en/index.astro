@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Home from '../../components/Home.astro';
+import AboutMe from '../../components/sections/AboutMe.astro';
+import Projects from '../../components/sections/Projects.astro';
+import Contact from '../../components/sections/Contact.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+
+const currentLang = 'en';
+const currentPath = Astro.url.pathname;
+---
+
+<Layout lang={currentLang}>
+  <div slot="full">
+    <Home lang={currentLang} />
+    <LanguageSwitcher 
+      currentLang={currentLang} 
+      currentPath={currentPath} 
+    />
+  </div>
+  <AboutMe lang={currentLang} />
+  <Projects lang={currentLang} />
+  <Contact lang={currentLang} />
+</Layout>

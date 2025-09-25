@@ -2,32 +2,58 @@
 import type { GetStaticPaths } from "astro";
 import { getCollection, render } from "astro:content";
 import Layout from '../../layouts/Layout.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import { getLanguageFromURL, type Language, getContentTranslations, DEFAULT_LANGUAGE, LANGUAGES, getLocalizedPath } from '../../utils/i18n';
+import { useTranslations } from '../../utils/translations';
 
 export const getStaticPaths = (async () => {
     const projects = await getCollection("projects");
+    const paths = [];
+    
+    // Filtrar solo proyectos en español para esta ruta
+    const spanishProjects = projects.filter(project => 
+        (project.data.lang || DEFAULT_LANGUAGE) === DEFAULT_LANGUAGE
+    );
 
-    return projects.map(project => ({
-        params: { id: project.data.path },
-        props: { project }
-    }));
+    // Generar rutas solo para proyectos en español
+    for (const project of spanishProjects) {
+        const basePath = project.data.path;
+        
+        paths.push({
+            params: { id: basePath },
+            props: { 
+                project,
+                lang: DEFAULT_LANGUAGE,
+                allProjects: projects
+            }
+        });
+    }
+
+    return paths;
 }) satisfies GetStaticPaths;
 
-const { project } = Astro.props;
-const { title, description, technologies, imageUrl} = project.data;
+const { project, lang, allProjects } = Astro.props;
+const { title, description, technologies, imageUrl } = project.data;
+const t = useTranslations(lang as Language);
 
 const { Content } = await render(project);
 
+// Obtener traducciones del proyecto actual
+const translations = getContentTranslations(allProjects, project.slug);
 
 ---
 
 
-<Layout title={title}>
+<Layout title={title} lang={lang}>
+    <LanguageSwitcher 
+        currentLang={lang}
+        currentPath={Astro.url.pathname}
+        translations={translations}
+    />
     <div class="mt-20 flex justify-center">
         <div class="prose prose-invert md:prose-lg text-white mb-16">
             <Content />
         </div>
-
     </div>
-
 </Layout>
 

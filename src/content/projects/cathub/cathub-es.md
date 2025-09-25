@@ -5,6 +5,7 @@ technologies:
   ["Python", "AdonisJS", "Angular", "Docker", "Mongo", "Postgres", "IOT"]
 imageUrl: cathub.png
 path: cat-hub
+lang: es
 ---
 
 # CatHub – Sistema IoT de Arenero, Comedero y Bebedero Inteligentes

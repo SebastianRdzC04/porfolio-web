@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render } from "astro:content";
+import Layout from '../../../layouts/Layout.astro';
+import LanguageSwitcher from '../../../components/LanguageSwitcher.astro';
+import { getContentTranslations, type Language, getContentByLanguage } from '../../../utils/i18n';
+import { useTranslations } from '../../../utils/translations';
+
+export const getStaticPaths = (async () => {
+    const allProjects = await getCollection("projects");
+    const englishProjects = getContentByLanguage(allProjects, 'en');
+    
+    return englishProjects.map(project => ({
+        params: { id: project.data.path },
+        props: { 
+            project,
+            lang: 'en' as Language,
+            allProjects
+        }
+    }));
+}) satisfies GetStaticPaths;
+
+const { project, lang, allProjects } = Astro.props;
+const { title, description, technologies, imageUrl } = project.data;
+const t = useTranslations(lang);
+
+const { Content } = await render(project);
+
+// Obtener traducciones del proyecto actual
+const translations = getContentTranslations(allProjects, project.slug);
+
+---
+
+<Layout title={title} lang={lang}>
+    <LanguageSwitcher 
+        currentLang={lang}
+        currentPath={Astro.url.pathname}
+        translations={translations}
+    />
+    <div class="mt-20 flex justify-center">
+        <div class="prose prose-invert md:prose-lg text-white mb-16">
+            <Content />
+        </div>
+    </div>
+</Layout>

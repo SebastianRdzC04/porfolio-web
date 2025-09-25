@@ -13,8 +13,9 @@ technologies:
     "Postgres",
     "Mongo",
   ]
-imgUrl: dmr.jpg
+imageUrl: dmr.jpg
 path: dmr-sorteos
+lang: es
 ---
 
 # Historia del proyecto – Sistema de Rifas

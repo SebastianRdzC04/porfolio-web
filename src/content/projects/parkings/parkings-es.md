@@ -6,6 +6,7 @@ technologies:
 githubUrl: https://github.com/SebastianRdzC04/ParKings-Integradora.git
 imageUrl: parkings.jpg
 path: parkings
+lang: es
 ---
 
 # Proyecto Parkings – Estacionamiento Inteligente

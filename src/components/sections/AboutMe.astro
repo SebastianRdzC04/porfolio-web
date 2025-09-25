@@ -1,4 +1,21 @@
 ---
+import { getCollection } from 'astro:content';
+import { type Language, DEFAULT_LANGUAGE, getContentByLanguage } from '../../utils/i18n';
+import { useTranslations } from '../../utils/translations';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = DEFAULT_LANGUAGE } = Astro.props;
+
+// Obtener el contenido de "About Me" según el idioma
+const aboutCollection = await getCollection('about');
+const aboutData = getContentByLanguage(aboutCollection, lang)[0];
+const { Content } = await aboutData.render();
+
+// Función para traducir
+const t = useTranslations(lang);
 
 //Languajes SVG
 import cplusplus from '../../assets/language/cplusplus.svg';
@@ -73,46 +90,21 @@ const tools = [
   <div class="flex flex-col md:flex-row gap-10 items-center">
     <!-- Texto -->
     <div class="md:w-1/2">
-      <h3 class="text-3xl font-bold text-indigo-400 pb-5" >Sobre mí</h3>
-      <div class="prose prose-invert text-[19px] max-w-none leading-relaxed">
-        <p class="mb-6">
-          Soy <span class="font-semibold text-indigo-300">Sebastián Rodríguez Contreras</span>, estudiante de la 
-          <span class="italic">Ingeniería en Tecnologías de la Información e Innovación Digital</span> en la 
-          Universidad Tecnológica de Torreón. Actualmente he concluido el 
-          <span class="font-medium">TSU en Desarrollo de Software Multiplataforma</span>, lo que me ha dado una base 
-          sólida en programación, desarrollo de sistemas y gestión de proyectos tecnológicos.
-        </p>
-
-        <p class="mb-6">
-          Durante mi trayectoria he adquirido experiencia en 
-          <span class="font-semibold">desarrollo web y móvil</span>, 
-          <span class="font-semibold">integración de sistemas IoT</span>, 
-          <span class="font-semibold">administración de servidores Linux</span>, 
-          despliegue en la nube con <span class="text-indigo-300">AWS</span> y uso de 
-          <span class="text-indigo-300">Docker</span> para entornos de producción. 
-          Tengo la capacidad de diseñar, implementar y mantener soluciones completas que 
-          combinan software, infraestructura y buenas prácticas de desarrollo.
-        </p>
-
-        <p>
-          Actualmente busco la oportunidad de realizar mis 
-          <span class="font-medium text-indigo-300">prácticas profesionales</span>, con el objetivo de llevar mi 
-          conocimiento y pasión al siguiente nivel: ver cómo mis ideas generan impacto en el mundo real. 
-          Para mí, programar no solo es crear software, sino construir soluciones que transformen la 
-          manera en que las personas interactúan con la tecnología.
-        </p>
+      <h3 class="text-3xl font-bold text-indigo-400 pb-5">{aboutData.data.sectionTitle}</h3>
+      <div class="prose prose-invert text-[19px] max-w-none leading-relaxed about-content">
+        <Content />
       </div>
     </div>
 
     <!-- Logos -->
     <div class="md:w-1/2 flex flex-col items-center">
-      <h4 class="text-xl font-semibold mb-6 text-indigo-300">Lenguajes y Tecnologías</h4>
+      <h4 class="text-xl font-semibold mb-6 text-indigo-300">{t('about.techSection')}</h4>
 
       <!-- Cambiado: ahora 3 filas apiladas (cada una es una "card" full-width) -->
       <div class="w-full flex flex-col gap-4">
         <!-- Lenguajes (fila 1) -->
         <div class="w-full bg-gray-800/30 rounded-lg p-4">
-          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">Lenguajes</h5>
+          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">{t('about.languages')}</h5>
           <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
             {languages.map((lang) => (
               <figure class="flex flex-col items-center gap-2 text-center" title={lang.name}>
@@ -125,7 +117,7 @@ const tools = [
 
         <!-- Frameworks (fila 2) -->
         <div class="w-full bg-gray-800/30 rounded-lg p-4">
-          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">Frameworks</h5>
+          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">{t('about.frameworks')}</h5>
           <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
             {frameworks.map((fw) => (
               <figure class="flex flex-col items-center gap-2 text-center" title={fw.name}>
@@ -138,7 +130,7 @@ const tools = [
 
         <!-- Herramientas (fila 3) -->
         <div class="w-full bg-gray-800/30 rounded-lg p-4">
-          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">Herramientas</h5>
+          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">{t('about.tools')}</h5>
           <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
             {tools.map((tool) => (
               <figure class="flex flex-col items-center gap-2 text-center" title={tool.name}>
@@ -152,3 +144,22 @@ const tools = [
     </div>
   </div>
 </section>
+
+<style>
+  .about-content :global(p) {
+    margin-bottom: 1.5rem;
+  }
+  
+  .about-content :global(strong) {
+    font-weight: 600;
+    color: #c7d2fe;
+  }
+  
+  .about-content :global(em) {
+    font-style: italic;
+  }
+  
+  .about-content :global(p:last-child) {
+    margin-bottom: 0;
+  }
+</style>

@@ -4,21 +4,22 @@ import Home from '../components/Home.astro';
 import AboutMe from '../components/sections/AboutMe.astro';
 import Projects from '../components/sections/Projects.astro';
 import Contact from '../components/sections/Contact.astro';
+import LanguageSwitcher from '../components/LanguageSwitcher.astro';
+import { DEFAULT_LANGUAGE } from '../utils/i18n';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const currentLang = DEFAULT_LANGUAGE;
+const currentPath = Astro.url.pathname;
 ---
 
-<Layout>
+<Layout lang={currentLang}>
   <div slot="full">
-    <Home />
+    <Home lang={currentLang} />
+    <LanguageSwitcher 
+      currentLang={currentLang} 
+      currentPath={currentPath} 
+    />
   </div>
-  <AboutMe />
-    <Projects />
-    <Contact />
-
-
-
-  <!-- Aquí el contenido que debe respetar 70% irá en el slot por defecto -->
-  <!-- <section>Tu contenido normal...</section> -->
+  <AboutMe lang={currentLang} />
+  <Projects lang={currentLang} />
+  <Contact lang={currentLang} />
 </Layout>

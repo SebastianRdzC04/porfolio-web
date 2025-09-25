@@ -1,18 +1,34 @@
 ---
 import NavigateLinks from "./NavigateLinks.astro"
 import MobileMenu from "./MobileMenu.astro"
+import { type Language, DEFAULT_LANGUAGE } from '../../utils/i18n';
 
+interface Props {
+  lang?: Language;
+}
+
+const { lang = DEFAULT_LANGUAGE } = Astro.props;
+
+// Función para generar la URL de inicio según el idioma
+function getHomeUrl(language: Language): string {
+  if (language === DEFAULT_LANGUAGE) {
+    return "/";
+  }
+  return "/en/";
+}
+
+const homeUrl = getHomeUrl(lang);
 ---
 
 
 <header class="fixed top-0 left-0 w-full z-50 bg-transparent backdrop-blur-md">
     <div class="container mx-auto px-4 flex justify-between items-center py-4">
         <div>
-            <h3 onclick="location.href='/'"  class="font-bold text-xl hover:cursor-default">SebasDevRC</h3>
+            <a href={homeUrl} class="font-bold text-xl hover:cursor-pointer">SebasDevRC</a>
         </div>
         <nav class="hidden md:block">
-            <NavigateLinks />
+            <NavigateLinks lang={lang} />
         </nav>
-        <MobileMenu />
+        <MobileMenu lang={lang} />
     </div>
 </header>
