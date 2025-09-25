@@ -1,0 +1,104 @@
+---
+interface Props {
+  title?: string;
+  description?: string;
+  technologies?: string[];
+  imageUrl?: string;
+  path?: string;
+}
+
+const {title = "Rifas DMR - Sorteos Online", description = "Plataforma de rifas en línea que ofrece sorteos emocionantes", technologies = [
+    "AdonisJS",
+    "Astro",
+    "Angular",
+    "React",
+    "Docker",
+    "CronJobs",
+    "Node",
+    "Postgres",
+    "Mongo",
+  ], imageUrl = "https://res.cloudinary.com/ddclkt7n4/image/upload/v1756173052/LogoDMR_1_xwxomr.jpg", path = ''} = Astro.props;
+---
+<a href={`projects/${path}`} class="block group">
+    <section class="w-[320px] flex-shrink-0 transition-transform duration-300 hover:-translate-y-1 relative">
+        <div class="w-full h-full rounded-2xl overflow-hidden bg-gray-800/30">
+            <div class="h-[180px] overflow-hidden">
+                <img 
+                    src={imageUrl !== 'https://res.cloudinary.com/ddclkt7n4/image/upload/v1756173052/LogoDMR_1_xwxomr.jpg' ? `/projects/${imageUrl}` : imageUrl} 
+                    alt={title} 
+                    class="w-full object-cover transition-transform duration-500 hover:scale-105"
+                >
+            </div>
+            <div class="mx-5">
+                <h2 class="text-xl font-bold mt-4 line-clamp-1 text-indigo-200">{title}</h2>
+                <h5 class="text-sm font-thin text-gray-300">{description}</h5>
+                
+                <div class="flex gap-2 my-4 overflow-x-auto scrollbar-none pb-2">
+                    {
+                        technologies.map(tech => (
+                            <div class="flex-shrink-0 transition-transform hover:scale-105 duration-200">
+                                <p class="text-[#fa7383] text-[12px] font-bold px-2 py-1 rounded-2xl bg-gray-950 border-0 whitespace-nowrap">{tech}</p>
+                            </div>
+                        ))
+                    }
+                </div>
+                
+                <div class="flex justify-between items-center mb-5">
+                    <h2 class="text-sm text-gray-300">2025</h2>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Botón de detalles con flecha (modificado para que apunte a la derecha) -->
+        <div class="absolute bottom-5 right-5 flex items-center justify-center">
+            <div class="arrow-button">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="arrow-icon">
+                    <path d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+            </div>
+        </div>
+    </section>
+</a>
+
+<style>
+    .scrollbar-none::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .scrollbar-none {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    
+    a:hover section {
+        box-shadow: 0 8px 15px -5px rgba(79, 70, 229, 0.15);
+    }
+    
+    .arrow-button {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: rgba(99, 102, 241, 0.2);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #a5b4fc;
+        transition: all 0.3s ease;
+        transform: scale(0.9);
+    }
+    
+    .group:hover .arrow-button {
+        background: rgba(99, 102, 241, 0.4);
+        transform: scale(1);
+    }
+    
+    .arrow-icon {
+        width: 16px;
+        height: 16px;
+        transition: transform 0.3s ease;
+    }
+    
+    .group:hover .arrow-icon {
+        transform: translateX(2px);
+    }
+</style>

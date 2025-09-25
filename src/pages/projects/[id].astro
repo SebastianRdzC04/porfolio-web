@@ -1,0 +1,33 @@
+---
+import type { GetStaticPaths } from "astro";
+import { getCollection, render } from "astro:content";
+import Layout from '../../layouts/Layout.astro';
+
+export const getStaticPaths = (async () => {
+    const projects = await getCollection("projects");
+
+    return projects.map(project => ({
+        params: { id: project.data.path },
+        props: { project }
+    }));
+}) satisfies GetStaticPaths;
+
+const { project } = Astro.props;
+const { title, description, technologies, imageUrl} = project.data;
+
+const { Content } = await render(project);
+
+
+---
+
+
+<Layout title={title}>
+    <div class="mt-20 flex justify-center">
+        <div class="prose prose-invert md:prose-lg text-white mb-16">
+            <Content />
+        </div>
+
+    </div>
+
+</Layout>
+

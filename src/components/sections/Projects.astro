@@ -1,0 +1,40 @@
+---
+import ProjectCard from '../compose/ProjectCard.astro';
+import { getCollection } from 'astro:content';
+
+const projects = await getCollection("projects");
+---
+
+<section id="projects" class=" py-12 px-4">
+    <h3 class="text-3xl font-bold mb-8 text-center text-indigo-400">Mis Proyectos</h3>
+    
+    <div class="projects-container overflow-x-auto pb-4">
+        <div class="flex gap-6 min-w-max">
+            {
+                projects.map(project => {
+                    const {slug, data} = project;
+                    const {title, description, technologies, imageUrl, path} = data;
+                    return (
+                        <ProjectCard title={title} description={description} technologies={technologies} imageUrl={imageUrl} path={path} />
+                    )
+                })
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    .projects-container {
+        max-height: calc(100vh - 200px);
+        scrollbar-width: thin;
+    }
+    
+    .projects-container::-webkit-scrollbar {
+        height: 6px;
+    }
+    
+    .projects-container::-webkit-scrollbar-thumb {
+        background-color: rgba(255, 255, 255, 0.2);
+        border-radius: 3px;
+    }
+</style>
