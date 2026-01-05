@@ -7,11 +7,19 @@ export type Language = keyof typeof LANGUAGES;
 
 export const DEFAULT_LANGUAGE: Language = "es";
 
+// Lista de idiomas válidos para validación
+export const VALID_LANGUAGES = Object.keys(LANGUAGES) as Language[];
+
+// Función para verificar si un código es un idioma válido
+export function isValidLanguage(code: string): code is Language {
+  return VALID_LANGUAGES.includes(code as Language);
+}
+
 // Función para obtener el idioma de la URL o usar el predeterminado
 export function getLanguageFromURL(pathname: string): Language {
   const langCode = pathname.split("/")[1];
-  if (langCode && langCode in LANGUAGES) {
-    return langCode as Language;
+  if (langCode && isValidLanguage(langCode)) {
+    return langCode;
   }
   return DEFAULT_LANGUAGE;
 }
@@ -63,4 +71,39 @@ export function getContentTranslations<
   }
 
   return translations;
+}
+
+// Función para obtener las URLs alternativas (útil para SEO)
+export function getAlternateUrls(
+  currentPath: string,
+  baseUrl: string,
+  translations?: Record<Language, { data: { path?: string } } | undefined>
+): Record<Language, string> {
+  const alternates: Record<Language, string> = {
+    es: "",
+    en: "",
+  };
+
+  for (const lang of VALID_LANGUAGES) {
+    if (translations && translations[lang]) {
+      const projectPath = translations[lang]?.data?.path;
+      alternates[lang] =
+        lang === DEFAULT_LANGUAGE
+          ? `${baseUrl}/projects/${projectPath}`
+          : `${baseUrl}/${lang}/projects/${projectPath}`;
+    } else {
+      if (currentPath === "/" || currentPath === "/en/") {
+        alternates[lang] =
+          lang === DEFAULT_LANGUAGE ? baseUrl : `${baseUrl}/${lang}/`;
+      } else {
+        const pathWithoutLang = currentPath.replace(/^\/en\//, "/");
+        alternates[lang] =
+          lang === DEFAULT_LANGUAGE
+            ? `${baseUrl}${pathWithoutLang}`
+            : `${baseUrl}/${lang}${pathWithoutLang}`;
+      }
+    }
+  }
+
+  return alternates;
 }

@@ -3,12 +3,11 @@ import type { GetStaticPaths } from "astro";
 import { getCollection, render } from "astro:content";
 import Layout from '../../layouts/Layout.astro';
 import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
-import { getLanguageFromURL, type Language, getContentTranslations, DEFAULT_LANGUAGE, LANGUAGES, getLocalizedPath } from '../../utils/i18n';
+import { type Language, getContentTranslations, DEFAULT_LANGUAGE } from '../../utils/i18n';
 import { useTranslations } from '../../utils/translations';
 
 export const getStaticPaths = (async () => {
     const projects = await getCollection("projects");
-    const paths = [];
     
     // Filtrar solo proyectos en español para esta ruta
     const spanishProjects = projects.filter(project => 
@@ -16,42 +15,43 @@ export const getStaticPaths = (async () => {
     );
 
     // Generar rutas solo para proyectos en español
-    for (const project of spanishProjects) {
-        const basePath = project.data.path;
-        
-        paths.push({
-            params: { id: basePath },
-            props: { 
-                project,
-                lang: DEFAULT_LANGUAGE,
-                allProjects: projects
-            }
-        });
-    }
-
-    return paths;
+    return spanishProjects.map(project => ({
+        params: { id: project.data.path },
+        props: { 
+            project,
+            lang: DEFAULT_LANGUAGE as Language,
+            allProjects: projects
+        }
+    }));
 }) satisfies GetStaticPaths;
 
+interface Props {
+    project: Awaited<ReturnType<typeof getCollection<'projects'>>>[number];
+    lang: Language;
+    allProjects: Awaited<ReturnType<typeof getCollection<'projects'>>>;
+}
+
 const { project, lang, allProjects } = Astro.props;
-const { title, description, technologies, imageUrl } = project.data;
-const t = useTranslations(lang as Language);
+const { title, description } = project.data;
+const t = useTranslations(lang);
 
 const { Content } = await render(project);
 
 // Obtener traducciones del proyecto actual
 const translations = getContentTranslations(allProjects, project.slug);
 
+// Generar URL canónica
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-
-<Layout title={title} lang={lang}>
+<Layout title={title} description={description} lang={lang} pageUrl={canonicalUrl}>
     <LanguageSwitcher 
         currentLang={lang}
         currentPath={Astro.url.pathname}
         translations={translations}
     />
     <div class="mt-20 flex justify-center">
-        <div class="prose prose-invert md:prose-lg text-white mb-16">
+        <div class="prose prose-invert md:prose-lg text-white mb-16 px-4">
             <Content />
         </div>
     </div>

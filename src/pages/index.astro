@@ -5,13 +5,22 @@ import AboutMe from '../components/sections/AboutMe.astro';
 import Projects from '../components/sections/Projects.astro';
 import Contact from '../components/sections/Contact.astro';
 import LanguageSwitcher from '../components/LanguageSwitcher.astro';
-import { DEFAULT_LANGUAGE } from '../utils/i18n';
+import { DEFAULT_LANGUAGE, type Language } from '../utils/i18n';
 
-const currentLang = DEFAULT_LANGUAGE;
+const currentLang: Language = DEFAULT_LANGUAGE;
 const currentPath = Astro.url.pathname;
+
+// SEO meta para la página principal
+const seoTitle = 'SebasDev Portfolio | Desarrollador Full Stack';
+const seoDescription = 'Portafolio de Sebastián Rodríguez — desarrollador de software Full Stack. Proyectos, habilidades y contacto.';
 ---
 
-<Layout lang={currentLang}>
+<Layout title={seoTitle} description={seoDescription} lang={currentLang}>
+  <Fragment slot="head">
+    <link rel="alternate" hreflang="es" href="https://portfolio.kysedomi.lat/" />
+    <link rel="alternate" hreflang="en" href="https://portfolio.kysedomi.lat/en/" />
+    <link rel="alternate" hreflang="x-default" href="https://portfolio.kysedomi.lat/" />
+  </Fragment>
   <div slot="full">
     <Home lang={currentLang} />
     <LanguageSwitcher 

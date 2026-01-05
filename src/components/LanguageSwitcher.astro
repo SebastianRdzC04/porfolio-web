@@ -1,27 +1,36 @@
 ---
-import { LANGUAGES, type Language, getLocalizedPath } from '../utils/i18n';
+import { LANGUAGES, type Language } from '../utils/i18n';
 import { useTranslations } from '../utils/translations';
 
 interface Props {
   currentLang: Language;
   currentPath: string;
-  translations?: Record<Language, any>;
+  translations?: Record<Language, { data: { path?: string } } | undefined>;
 }
 
 const { currentLang, currentPath, translations } = Astro.props;
 const t = useTranslations(currentLang);
+
+// Determinar la etiqueta de accesibilidad según el idioma actual
+const ariaLabel = currentLang === 'es' ? 'Cambiar idioma' : 'Change language';
 ---
 
 <div class="language-switcher">
   <div class="language-dropdown" id="language-dropdown">
-    <button class="language-icon" aria-label="Cambiar idioma" id="language-toggle">
+    <button 
+      class="language-icon" 
+      aria-label={ariaLabel}
+      aria-expanded="false"
+      aria-haspopup="true"
+      id="language-toggle"
+    >
       <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
         <circle cx="12" cy="12" r="10"></circle>
         <line x1="2" y1="12" x2="22" y2="12"></line>
         <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
       </svg>
     </button>
-    <div class="language-menu" id="language-menu">
+    <div class="language-menu" id="language-menu" role="menu">
       {Object.entries(LANGUAGES).map(([code, name]) => {
         const lang = code as Language;
         const isActive = lang === currentLang;
@@ -29,7 +38,7 @@ const t = useTranslations(currentLang);
         let href: string;
         if (translations && translations[lang]) {
           // Si tenemos traducciones específicas para proyectos
-          const projectPath = translations[lang].data.path;
+          const projectPath = translations[lang]?.data?.path;
           href = lang === 'es' ? `/projects/${projectPath}` : `/en/projects/${projectPath}`;
         } else {
           // Para páginas generales
@@ -48,6 +57,8 @@ const t = useTranslations(currentLang);
             class={`language-option ${isActive ? 'active' : ''}`}
             aria-current={isActive ? 'page' : undefined}
             data-lang={lang}
+            role="menuitem"
+            hreflang={lang}
           >
             {name}
           </a>
@@ -142,91 +153,74 @@ const t = useTranslations(currentLang);
 </style>
 
 <script>
-  // Este script maneja el toggle del menú de idiomas con un clic en lugar de hover
-  document.addEventListener('DOMContentLoaded', () => {
+  // Función para inicializar el Language Switcher
+  function initLanguageSwitcher(): void {
     const languageToggle = document.getElementById('language-toggle');
     const languageMenu = document.getElementById('language-menu');
     const languageDropdown = document.getElementById('language-dropdown');
     
-    if (languageToggle && languageMenu && languageDropdown) {
-      let isMenuOpen = false;
-      
-      // Función para abrir/cerrar el menú de idiomas
-      function toggleLanguageMenu(event: Event) {
-        event.stopPropagation(); // Evitar la propagación del evento
-        isMenuOpen = !isMenuOpen;
-        
-        
-        if (!languageMenu) {
-          return;
-        }
-        if (isMenuOpen) {
-          languageMenu.classList.add('show');
-        } else {
-          languageMenu.classList.remove('show');
-        }
-      }
-      
-      // Cerrar el menú si se hace clic fuera
-      function closeLanguageMenu(event: Event) {
-        const target = event.target as Node;
-
-        if (!languageDropdown.contains(target)) {
-          languageMenu.classList.remove('show');
-          isMenuOpen = false;
-        }
-      }
-      
-      // Prevenir cierre al hacer clic en el menú de idiomas
-      languageMenu.addEventListener('click', (e) => {
-        e.stopPropagation();
-      });
-      
-      // Agregar listeners
-      languageToggle.addEventListener('click', toggleLanguageMenu);
-      document.addEventListener('click', closeLanguageMenu);
-      document.addEventListener('touchstart', closeLanguageMenu);
-      
-      // Si se presiona ESC, cerrar el menú
-      document.addEventListener('keydown', (e: KeyboardEvent) => {
-        if (e.key === 'Escape' && isMenuOpen) {
-          languageMenu.classList.remove('show');
-          isMenuOpen = false;
-        }
-      });
-      
-      // Asegurarse de que los clics en los enlaces de idiomas funcionen correctamente
-      const languageOptions = document.querySelectorAll('.language-option');
-      languageOptions.forEach(option => {
-        option.addEventListener('click', (e) => {
-          e.stopPropagation();
-          
-          // Registramos que estamos cambiando de idioma para el problema del menú móvil
-          localStorage.setItem('languageChanged', 'true');
-          localStorage.setItem('selectedLanguage', option.getAttribute('data-lang') || '');
-          
-          // Disparar evento de almacenamiento para asegurar que otros componentes lo detecten
-          window.dispatchEvent(new StorageEvent('storage', {
-            key: 'languageChanged',
-            newValue: 'true',
-            storageArea: localStorage
-          }));
-          
-          // También disparar un evento personalizado como respaldo
-          window.dispatchEvent(new Event('languagechange'));
-          
-          // Agregar un pequeño delay antes de navegar para que los eventos se procesen
-          setTimeout(() => {
-            const href = option.getAttribute('href');
-            if (href) {
-              window.location.href = href;
-            }
-          }, 50);
-          
-          // Prevenir la navegación predeterminada para permitir que nuestro código maneje la redirección
-          e.preventDefault();
-        });
-      });
+    if (!languageToggle || !languageMenu || !languageDropdown) {
+      return;
     }
-  });
+
+    // Crear referencias locales para evitar errores de null
+    const toggle = languageToggle;
+    const menu = languageMenu;
+    const dropdown = languageDropdown;
+
+    let isMenuOpen = false;
+    
+    // Función para abrir/cerrar el menú de idiomas
+    function toggleLanguageMenu(event: Event): void {
+      event.stopPropagation();
+      isMenuOpen = !isMenuOpen;
+      
+      if (isMenuOpen) {
+        menu.classList.add('show');
+        toggle.setAttribute('aria-expanded', 'true');
+      } else {
+        menu.classList.remove('show');
+        toggle.setAttribute('aria-expanded', 'false');
+      }
+    }
+    
+    // Cerrar el menú si se hace clic fuera
+    function closeLanguageMenu(event: Event): void {
+      const target = event.target as Node;
+
+      if (!dropdown.contains(target)) {
+        menu.classList.remove('show');
+        toggle.setAttribute('aria-expanded', 'false');
+        isMenuOpen = false;
+      }
+    }
+    
+    // Limpiar event listeners previos clonando elementos
+    const newToggle = toggle.cloneNode(true) as HTMLElement;
+    toggle.parentNode?.replaceChild(newToggle, toggle);
+    
+    // Agregar listeners al nuevo botón
+    newToggle.addEventListener('click', toggleLanguageMenu);
+    
+    // Listener global para cerrar
+    document.addEventListener('click', closeLanguageMenu);
+    
+    // Si se presiona ESC, cerrar el menú
+    document.addEventListener('keydown', (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && isMenuOpen) {
+        menu.classList.remove('show');
+        newToggle.setAttribute('aria-expanded', 'false');
+        isMenuOpen = false;
+      }
+    });
+    
+    // Los enlaces de idioma funcionan con navegación normal de Astro View Transitions
+    // No necesitan preventDefault - dejar que las transiciones manejen la navegación
+  }
+
+  // Inicializar en carga inicial
+  initLanguageSwitcher();
+  
+  // Re-inicializar después de View Transitions
+  document.addEventListener('astro:page-load', initLanguageSwitcher);
 </script>

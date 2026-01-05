@@ -20,8 +20,14 @@ export const getStaticPaths = (async () => {
     }));
 }) satisfies GetStaticPaths;
 
+interface Props {
+    project: Awaited<ReturnType<typeof getCollection<'projects'>>>[number];
+    lang: Language;
+    allProjects: Awaited<ReturnType<typeof getCollection<'projects'>>>;
+}
+
 const { project, lang, allProjects } = Astro.props;
-const { title, description, technologies, imageUrl } = project.data;
+const { title, description } = project.data;
 const t = useTranslations(lang);
 
 const { Content } = await render(project);
@@ -29,16 +35,18 @@ const { Content } = await render(project);
 // Obtener traducciones del proyecto actual
 const translations = getContentTranslations(allProjects, project.slug);
 
+// Generar URL canónica
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
-<Layout title={title} lang={lang}>
+<Layout title={title} description={description} lang={lang} pageUrl={canonicalUrl}>
     <LanguageSwitcher 
         currentLang={lang}
         currentPath={Astro.url.pathname}
         translations={translations}
     />
     <div class="mt-20 flex justify-center">
-        <div class="prose prose-invert md:prose-lg text-white mb-16">
+        <div class="prose prose-invert md:prose-lg text-white mb-16 px-4">
             <Content />
         </div>
     </div>

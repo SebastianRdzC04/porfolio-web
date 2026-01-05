@@ -12,21 +12,21 @@ export interface Props {
   pageUrl?: string
   lang?: Language
 }
-export let pageUrl: string = "https://portfolio.kysedomi.lat" // actualiza con tu dominio
+
+const BASE_URL = "https://portfolio.kysedomi.lat";
 
 const { 
   title = 'SebasDev Portfolio', 
   description = 'Portafolio de SebasDev — desarrollador de software. Proyectos, blog y contacto.', 
   image = 'https://res.cloudinary.com/ddclkt7n4/image/upload/v1756683599/Generated_Image_August_31_2025_-_12_21PM_1_khdzwx.jpg',
+  pageUrl = BASE_URL,
   lang = DEFAULT_LANGUAGE 
-} = Astro.props as Props;
-
+} = Astro.props;
 
 ---
 
-
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width" />
@@ -47,15 +47,18 @@ const {
         <meta property="og:image:height" content="520" />
         <meta property="og:url" content={pageUrl} />
         <meta property="og:site_name" content="SebasDev" />
+        <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
 
         <!-- Twitter -->
         <meta name="twitter:card" content="summary_large_image" />
         <meta name="twitter:title" content={title} />
         <meta name="twitter:description" content={description} />
         <meta name="twitter:image" content={image} />
+        
+        <!-- Slot para contenido adicional en head (hreflang tags, etc.) -->
+        <slot name="head" />
+        
         <ClientRouter />
-
-
     </head>
     <body class="text-white">
         <!-- Header en contenedor 70% -->
@@ -70,8 +73,6 @@ const {
         <div class="md:w-[70%] w-[92%] mx-auto">
             <slot />
         </div>
-
-        
     </body>
 </html>
 

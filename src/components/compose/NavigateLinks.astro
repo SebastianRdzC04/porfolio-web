@@ -1,6 +1,6 @@
 ---
 import { type Language, DEFAULT_LANGUAGE } from '../../utils/i18n';
-import { useTranslations } from '../../utils/translations';
+import { useTranslations, type TranslationKey } from '../../utils/translations';
 
 interface Props {
   lang?: Language;
@@ -17,21 +17,26 @@ function getLocalizedUrl(path: string, language: Language): string {
   return `/en${path}`;
 }
 
-const navItems = [
+interface NavItem {
+  titleKey: TranslationKey;
+  url: string;
+}
+
+const navItems: NavItem[] = [
     { 
-      titleKey: "nav.home" as keyof typeof import('../../utils/translations').ui['es'],
+      titleKey: "nav.home",
       url: getLocalizedUrl("/", lang)
     },
     { 
-      titleKey: "nav.about" as keyof typeof import('../../utils/translations').ui['es'],
+      titleKey: "nav.about",
       url: getLocalizedUrl("/#about-me", lang)
     },
     { 
-      titleKey: "nav.projects" as keyof typeof import('../../utils/translations').ui['es'],
+      titleKey: "nav.projects",
       url: getLocalizedUrl("/#projects", lang)
     },
     { 
-      titleKey: "nav.contact" as keyof typeof import('../../utils/translations').ui['es'],
+      titleKey: "nav.contact",
       url: getLocalizedUrl("/#contact", lang)
     }
 ];

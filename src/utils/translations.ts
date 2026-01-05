@@ -53,8 +53,17 @@ export const ui = {
   },
 } as const;
 
+// Tipo para las claves de traducción
+export type TranslationKey = keyof typeof ui.es;
+
+// Hook de traducciones con tipado fuerte
 export function useTranslations(lang: Language) {
-  return function t(key: keyof (typeof ui)[Language]) {
-    return ui[lang][key] || ui["es"][key];
+  return function t(key: TranslationKey): string {
+    return ui[lang]?.[key] ?? ui.es[key] ?? key;
   };
+}
+
+// Función alternativa para obtener una traducción específica
+export function getTranslation(lang: Language, key: TranslationKey): string {
+  return ui[lang]?.[key] ?? ui.es[key] ?? key;
 }
