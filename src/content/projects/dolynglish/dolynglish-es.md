@@ -1,6 +1,6 @@
 ---
 title: Dolynglish
-description: Aplicación móvil multiplataforma para mejorar vocabulario y comprensión lectora mediante historias generadas
+description: Aplicación móvil para mejorar vocabulario y comprensión lectora
 technologies: ["React Native", "AdonisJS", "PostgreSQL", "Docker"]
 githubUrl: https://github.com/SebastianRdzC04/dolynglish.git
 imageUrl: dolynglish.png
