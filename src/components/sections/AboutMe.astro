@@ -1,5 +1,5 @@
 ---
-import { getCollection } from 'astro:content';
+import { getCollection, render } from 'astro:content';
 import { type Language, DEFAULT_LANGUAGE, getContentByLanguage } from '../../utils/i18n';
 import { useTranslations } from '../../utils/translations';
 
@@ -9,13 +9,15 @@ interface Props {
 
 const { lang = DEFAULT_LANGUAGE } = Astro.props;
 
-// Obtener el contenido de "About Me" según el idioma
-const aboutCollection = await getCollection('about');
-const aboutData = getContentByLanguage(aboutCollection, lang)[0];
-const { Content } = await aboutData.render();
-
 // Función para traducir
 const t = useTranslations(lang);
+
+// Obtener el contenido de "About Me" según el idioma
+const aboutCollection = await getCollection('about');
+const aboutData = getContentByLanguage(aboutCollection, lang)[0] ?? aboutCollection[0];
+const aboutSectionTitle = aboutData?.data.sectionTitle ?? t('about.title');
+const renderedAbout = aboutData ? await render(aboutData) : null;
+const Content = renderedAbout?.Content;
 
 //Languajes SVG
 import cplusplus from '../../assets/language/cplusplus.svg';
@@ -90,9 +92,9 @@ const tools = [
   <div class="flex flex-col md:flex-row gap-10 items-center">
     <!-- Texto -->
     <div class="md:w-1/2">
-      <h3 class="text-3xl font-bold text-indigo-400 pb-5">{aboutData.data.sectionTitle}</h3>
+      <h3 class="text-3xl font-bold text-indigo-400 pb-5">{aboutSectionTitle}</h3>
       <div class="prose prose-invert text-[19px] max-w-none leading-relaxed about-content">
-        <Content />
+        {Content ? <Content /> : null}
       </div>
     </div>
 

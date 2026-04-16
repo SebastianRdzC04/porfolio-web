@@ -53,9 +53,9 @@ export function getSlugWithoutLang(slug: string): string {
 
 // Función para obtener traducciones de contenido
 export function getContentTranslations<
-  T extends { slug: string; data: { lang?: Language } }
->(allContent: T[], currentSlug: string): Record<Language, T | undefined> {
-  const baseSlug = getSlugWithoutLang(currentSlug);
+  T extends { id: string; data: { lang?: Language } }
+>(allContent: T[], currentId: string): Record<Language, T | undefined> {
+  const baseSlug = getSlugWithoutLang(currentId);
 
   const translations: Record<Language, T | undefined> = {
     es: undefined,
@@ -63,7 +63,7 @@ export function getContentTranslations<
   };
 
   for (const content of allContent) {
-    const contentBaseSlug = getSlugWithoutLang(content.slug);
+    const contentBaseSlug = getSlugWithoutLang(content.id);
     if (contentBaseSlug === baseSlug) {
       const lang = content.data.lang || DEFAULT_LANGUAGE;
       translations[lang] = content;

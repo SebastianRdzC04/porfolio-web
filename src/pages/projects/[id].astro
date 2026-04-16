@@ -8,9 +8,11 @@ import { useTranslations } from '../../utils/translations';
 
 export const getStaticPaths = (async () => {
     const projects = await getCollection("projects");
+    const personalProjects = await getCollection("personalProjects");
+    const allProjects = [...projects, ...personalProjects];
     
     // Filtrar solo proyectos en español para esta ruta
-    const spanishProjects = projects.filter(project => 
+    const spanishProjects = allProjects.filter(project => 
         (project.data.lang || DEFAULT_LANGUAGE) === DEFAULT_LANGUAGE
     );
 
@@ -20,15 +22,19 @@ export const getStaticPaths = (async () => {
         props: { 
             project,
             lang: DEFAULT_LANGUAGE as Language,
-            allProjects: projects
+            allProjects
         }
     }));
 }) satisfies GetStaticPaths;
 
+type ProjectEntry = Awaited<ReturnType<typeof getCollection<'projects'>>>[number];
+type PersonalProjectEntry = Awaited<ReturnType<typeof getCollection<'personalProjects'>>>[number];
+type ProjectContentEntry = ProjectEntry | PersonalProjectEntry;
+
 interface Props {
-    project: Awaited<ReturnType<typeof getCollection<'projects'>>>[number];
+    project: ProjectContentEntry;
     lang: Language;
-    allProjects: Awaited<ReturnType<typeof getCollection<'projects'>>>;
+    allProjects: ProjectContentEntry[];
 }
 
 const { project, lang, allProjects } = Astro.props;
@@ -38,7 +44,7 @@ const t = useTranslations(lang);
 const { Content } = await render(project);
 
 // Obtener traducciones del proyecto actual
-const translations = getContentTranslations(allProjects, project.slug);
+const translations = getContentTranslations(allProjects, project.id);
 
 // Generar URL canónica
 const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
@@ -56,4 +62,3 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
         </div>
     </div>
 </Layout>
-

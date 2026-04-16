@@ -1,7 +1,7 @@
 ---
 import ProjectCard from '../compose/ProjectCard.astro';
 import { getCollection } from 'astro:content';
-import { getContentByLanguage, type Language, DEFAULT_LANGUAGE, getLocalizedPath } from '../../utils/i18n';
+import { getContentByLanguage, type Language, DEFAULT_LANGUAGE } from '../../utils/i18n';
 import { useTranslations } from '../../utils/translations';
 
 interface Props {
@@ -11,6 +11,8 @@ interface Props {
 const { lang = DEFAULT_LANGUAGE } = Astro.props;
 const allProjects = await getCollection("projects");
 const projects = getContentByLanguage(allProjects, lang);
+const allPersonalProjects = await getCollection("personalProjects");
+const personalProjects = getContentByLanguage(allPersonalProjects, lang);
 const t = useTranslations(lang);
 ---
 
@@ -21,7 +23,7 @@ const t = useTranslations(lang);
         <div class="flex gap-6 min-w-max">
             {
                 projects.map(project => {
-                    const {slug, data} = project;
+                    const { data } = project;
                     const {title, description, technologies, imageUrl, path} = data;
                     // Generar la ruta correcta según el idioma
                     const projectPath = lang === 'es' ? `/projects/${path}` : `/en/projects/${path}`;
@@ -31,6 +33,31 @@ const t = useTranslations(lang);
                             description={description} 
                             technologies={technologies} 
                             imageUrl={imageUrl} 
+                            path={projectPath}
+                            lang={lang}
+                        />
+                    )
+                })
+            }
+        </div>
+    </div>
+
+    <h4 class="text-2xl font-bold mt-12 mb-6 text-center text-indigo-300">{t('projects.personalTitle')}</h4>
+
+    <div class="projects-container overflow-x-auto pb-4">
+        <div class="flex gap-6 min-w-max">
+            {
+                personalProjects.map(project => {
+                    const { data } = project;
+                    const { title, description, technologies, imageUrl, path } = data;
+                    const projectPath = lang === 'es' ? `/projects/${path}` : `/en/projects/${path}`;
+
+                    return (
+                        <ProjectCard
+                            title={title}
+                            description={description}
+                            technologies={technologies}
+                            imageUrl={imageUrl}
                             path={projectPath}
                             lang={lang}
                         />

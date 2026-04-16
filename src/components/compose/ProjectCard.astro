@@ -1,6 +1,5 @@
 ---
 import { type Language, DEFAULT_LANGUAGE } from '../../utils/i18n';
-import { useTranslations } from '../../utils/translations';
 
 interface Props {
   title?: string;
@@ -25,19 +24,26 @@ const {
     "Postgres",
     "Mongo",
   ], 
-  imageUrl = "https://res.cloudinary.com/ddclkt7n4/image/upload/v1756173052/LogoDMR_1_xwxomr.jpg", 
+  imageUrl = "https://res.cloudinary.com/ddclkt7n4/image/upload/v1756173052/LogoDMR_1_xwxomr.jpg",
   path = '',
   lang = DEFAULT_LANGUAGE
 } = Astro.props;
 
-const t = useTranslations(lang);
+const DEFAULT_IMAGE_URL = "https://res.cloudinary.com/ddclkt7n4/image/upload/v1756173052/LogoDMR_1_xwxomr.jpg";
+const cleanedImageUrl = imageUrl.trim();
+const hasCustomImage = cleanedImageUrl.length > 0 && cleanedImageUrl !== DEFAULT_IMAGE_URL;
+const imageSource = !hasCustomImage
+  ? DEFAULT_IMAGE_URL
+  : /^https?:\/\//.test(cleanedImageUrl) || cleanedImageUrl.startsWith('/')
+    ? cleanedImageUrl
+    : `/projects/${cleanedImageUrl.replace(/^\.?\//, '')}`;
 ---
 <a href={path} class="block group">
     <section class="w-[320px] flex-shrink-0 transition-transform duration-300 hover:-translate-y-1 relative">
         <div class="w-full h-full rounded-2xl overflow-hidden bg-gray-800/30">
             <div class="h-[180px] overflow-hidden">
                 <img 
-                    src={imageUrl !== 'https://res.cloudinary.com/ddclkt7n4/image/upload/v1756173052/LogoDMR_1_xwxomr.jpg' ? `/projects/${imageUrl}` : imageUrl} 
+                    src={imageSource}
                     alt={title} 
                     class="w-full object-cover transition-transform duration-500 hover:scale-105"
                 >
