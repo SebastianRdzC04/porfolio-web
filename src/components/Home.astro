@@ -21,7 +21,7 @@ const homeContent = {
 ---
 
 <div class="w-screen h-screen bg-center bg-black" style="background-image: url('/fondo.webp');">
-  <div class="w-[70%] mx-auto h-full flex flex-col justify-center items-center text-white">
+  <div class="md:w-[70%] w-[92%] mx-auto h-full flex flex-col justify-center items-center text-white">
     <div class="text-center">
       <div class="relative w-fit mx-auto mb-8">
         <div class="absolute inset-0 rounded-full bg-[#1F2E4A] p-[3px]" style="transform: scale(1.05);"></div>
@@ -29,9 +29,13 @@ const homeContent = {
         <div class="absolute top-0 right-0 w-3 h-3 bg-[#F7DC6F] rounded-full blur-sm animate-ping" style="animation-duration: 3s;"></div>
         <div class="absolute bottom-2 left-0 w-2 h-2 bg-[#E67E22] rounded-full blur-sm animate-ping" style="animation-duration: 4s;"></div>
       </div>
-      <div class="p-4 bg-black/50 rounded-2xl">
-        <h1 class="text-6xl font-bold mb-4 text-[#F5F5F5] drop-shadow-lg">{homeContent[lang].greeting}</h1>
-        <p class="text-2xl text-end font-bold">{homeContent[lang].role}</p>
+      <div class="p-5 sm:p-6 bg-black/50 rounded-2xl">
+        <h1 class="text-[clamp(2rem,5vw,3.6rem)] leading-[1.05] font-bold mb-4 text-[#F5F5F5] drop-shadow-lg max-w-[20ch]">
+          {homeContent[lang].greeting}
+        </h1>
+        <p class="text-[clamp(1.05rem,2.1vw,1.5rem)] leading-snug text-center sm:text-end font-semibold tracking-wide">
+          {homeContent[lang].role}
+        </p>
       </div>
       <div class="flex pt-5 mx-auto w-full justify-center">
         <SocialLinks />

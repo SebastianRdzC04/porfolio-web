@@ -44,7 +44,7 @@ const navItems: NavItem[] = [
 
 <div>
     <nav>
-        <ul class="flex gap-10">
+        <ul class="flex gap-8 lg:gap-10 text-[0.95rem] lg:text-base font-medium tracking-wide">
             {navItems.map((item) => (
                 <li><a href={item.url}>{t(item.titleKey)}</a></li>
             ))}

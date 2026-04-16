@@ -87,57 +87,57 @@ const tools = [
 
 
 
-<section class="py-12 px-6  text-gray-100" id="about-me">
+<section class="py-14 px-4 md:px-6 text-gray-100" id="about-me">
   
-  <div class="flex flex-col md:flex-row gap-10 items-center">
+  <div class="flex flex-col md:flex-row gap-10 md:gap-12 items-start">
     <!-- Texto -->
     <div class="md:w-1/2">
-      <h3 class="text-3xl font-bold text-indigo-400 pb-5">{aboutSectionTitle}</h3>
-      <div class="prose prose-invert text-[19px] max-w-none leading-relaxed about-content">
+      <h3 class="text-[clamp(1.8rem,3.2vw,2.35rem)] leading-tight font-bold text-indigo-400 pb-5">{aboutSectionTitle}</h3>
+      <div class="prose prose-invert max-w-none about-content text-[clamp(1rem,1.7vw,1.14rem)] leading-relaxed prose-p:leading-relaxed prose-headings:tracking-tight prose-strong:text-indigo-100 prose-a:text-indigo-300">
         {Content ? <Content /> : null}
       </div>
     </div>
 
     <!-- Logos -->
     <div class="md:w-1/2 flex flex-col items-center">
-      <h4 class="text-xl font-semibold mb-6 text-indigo-300">{t('about.techSection')}</h4>
+      <h4 class="text-[clamp(1.2rem,2.2vw,1.45rem)] font-semibold mb-6 text-indigo-300">{t('about.techSection')}</h4>
 
       <!-- Cambiado: ahora 3 filas apiladas (cada una es una "card" full-width) -->
       <div class="w-full flex flex-col gap-4">
         <!-- Lenguajes (fila 1) -->
-        <div class="w-full bg-gray-800/30 rounded-lg p-4">
-          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">{t('about.languages')}</h5>
+        <div class="w-full bg-gray-800/30 rounded-lg p-4 sm:p-5">
+          <h5 class="text-[0.95rem] font-semibold mb-3 text-indigo-200 text-center tracking-wide">{t('about.languages')}</h5>
           <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
             {languages.map((lang) => (
               <figure class="flex flex-col items-center gap-2 text-center" title={lang.name}>
                 <img src={lang.src} alt={lang.name} class="w-12 h-12 object-contain transition-transform transform hover:scale-110" />
-                <figcaption class="text-xs text-gray-300">{lang.name}</figcaption>
+                <figcaption class="text-[0.78rem] leading-tight text-gray-300">{lang.name}</figcaption>
               </figure>
             ))}
           </div>
         </div>
 
         <!-- Frameworks (fila 2) -->
-        <div class="w-full bg-gray-800/30 rounded-lg p-4">
-          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">{t('about.frameworks')}</h5>
+        <div class="w-full bg-gray-800/30 rounded-lg p-4 sm:p-5">
+          <h5 class="text-[0.95rem] font-semibold mb-3 text-indigo-200 text-center tracking-wide">{t('about.frameworks')}</h5>
           <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
             {frameworks.map((fw) => (
               <figure class="flex flex-col items-center gap-2 text-center" title={fw.name}>
                 <img src={fw.src} alt={fw.name} class="w-12 h-12 object-contain transition-transform transform hover:scale-110" />
-                <figcaption class="text-xs text-gray-300">{fw.name}</figcaption>
+                <figcaption class="text-[0.78rem] leading-tight text-gray-300">{fw.name}</figcaption>
               </figure>
             ))}
           </div>
         </div>
 
         <!-- Herramientas (fila 3) -->
-        <div class="w-full bg-gray-800/30 rounded-lg p-4">
-          <h5 class="text-sm font-semibold mb-3 text-indigo-200 text-center">{t('about.tools')}</h5>
+        <div class="w-full bg-gray-800/30 rounded-lg p-4 sm:p-5">
+          <h5 class="text-[0.95rem] font-semibold mb-3 text-indigo-200 text-center tracking-wide">{t('about.tools')}</h5>
           <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-4 gap-3 items-center justify-items-center">
             {tools.map((tool) => (
               <figure class="flex flex-col items-center gap-2 text-center" title={tool.name}>
                 <img src={tool.src} alt={tool.name} class="w-12 h-12 object-contain transition-transform transform hover:scale-110" />
-                <figcaption class="text-xs text-gray-300">{tool.name}</figcaption>
+                <figcaption class="text-[0.78rem] leading-tight text-gray-300">{tool.name}</figcaption>
               </figure>
             ))}
           </div>
@@ -155,6 +155,11 @@ const tools = [
   .about-content :global(strong) {
     font-weight: 600;
     color: #c7d2fe;
+  }
+
+  .about-content :global(ul),
+  .about-content :global(ol) {
+    margin-bottom: 1.2rem;
   }
   
   .about-content :global(em) {

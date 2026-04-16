@@ -65,9 +65,9 @@ const closeMenuLabel = lang === 'es' ? 'Cerrar menú' : 'Close menu';
             </button>
             
             <!-- Navigation Links -->
-            <nav class="flex flex-col space-y-4" aria-label={lang === 'es' ? 'Navegación principal' : 'Main navigation'}>
-                {navItems.map((item) => (
-                    <a href={item.url} class="text-white text-xl py-2 hover:text-emerald-400 transition-colors duration-300">
+                <nav class="flex flex-col space-y-4" aria-label={lang === 'es' ? 'Navegación principal' : 'Main navigation'}>
+                    {navItems.map((item) => (
+                    <a href={item.url} class="text-white text-[1.125rem] py-2 hover:text-emerald-400 transition-colors duration-300">
                         {t(item.titleKey)}
                     </a>
                 ))}

@@ -39,31 +39,31 @@ const imageSource = !hasCustomImage
     : `/projects/${cleanedImageUrl.replace(/^\.?\//, '')}`;
 ---
 <a href={path} class="block group">
-    <section class="w-[320px] flex-shrink-0 transition-transform duration-300 hover:-translate-y-1 relative">
+    <section class="w-[320px] md:w-[340px] flex-shrink-0 transition-transform duration-300 hover:-translate-y-1 relative">
         <div class="w-full h-full rounded-2xl overflow-hidden bg-gray-800/30">
-            <div class="h-[180px] overflow-hidden">
+            <div class="h-[190px] overflow-hidden">
                 <img 
                     src={imageSource}
                     alt={title} 
                     class="w-full object-cover transition-transform duration-500 hover:scale-105"
                 >
             </div>
-            <div class="mx-5">
-                <h2 class="text-xl font-bold mt-4 line-clamp-1 text-indigo-200">{title}</h2>
-                <h5 class="text-sm font-thin text-gray-300">{description}</h5>
+            <div class="mx-5 sm:mx-6">
+                <h2 class="text-[1.2rem] md:text-[1.28rem] leading-tight font-bold mt-4 line-clamp-1 text-indigo-200">{title}</h2>
+                <h5 class="text-[0.94rem] leading-relaxed font-normal text-gray-300">{description}</h5>
                 
                 <div class="flex gap-2 my-4 overflow-x-auto scrollbar-none pb-2">
                     {
                         technologies.map(tech => (
                             <div class="flex-shrink-0 transition-transform hover:scale-105 duration-200">
-                                <p class="text-[#fa7383] text-[12px] font-bold px-2 py-1 rounded-2xl bg-gray-950 border-0 whitespace-nowrap">{tech}</p>
+                                <p class="text-[#fa7383] text-[0.78rem] font-semibold px-2 py-1 rounded-2xl bg-gray-950 border-0 whitespace-nowrap">{tech}</p>
                             </div>
                         ))
                     }
                 </div>
                 
                 <div class="flex justify-between items-center mb-5">
-                    <h2 class="text-sm text-gray-300">2025</h2>
+                    <h2 class="text-[0.88rem] text-gray-300">2025</h2>
                 </div>
             </div>
         </div>
