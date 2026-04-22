@@ -17,9 +17,9 @@ const t = useTranslations(lang);
 ---
 
 <section id="projects" class="py-14 px-4">
-    <h3 class="text-[clamp(1.8rem,3.2vw,2.35rem)] leading-tight font-bold mb-8 text-center text-indigo-400">{t('projects.title')}</h3>
+    <h3 class="text-[clamp(1.8rem,3.2vw,2.35rem)] leading-tight font-bold mb-8 text-center text-indigo-400" data-reveal>{t('projects.title')}</h3>
     
-    <div class="projects-container overflow-x-auto pb-4">
+    <div class="projects-container overflow-x-auto pb-4" data-reveal style="--reveal-delay: 110ms;">
         <div class="flex gap-6 min-w-max">
             {
                 projects.map(project => {
@@ -42,9 +42,9 @@ const t = useTranslations(lang);
         </div>
     </div>
 
-    <h4 class="text-[clamp(1.45rem,2.4vw,1.9rem)] leading-tight font-bold mt-12 mb-6 text-center text-indigo-300">{t('projects.personalTitle')}</h4>
+    <h4 class="text-[clamp(1.45rem,2.4vw,1.9rem)] leading-tight font-bold mt-12 mb-6 text-center text-indigo-300" data-reveal style="--reveal-delay: 120ms;">{t('projects.personalTitle')}</h4>
 
-    <div class="projects-container overflow-x-auto pb-4">
+    <div class="projects-container overflow-x-auto pb-4" data-reveal style="--reveal-delay: 180ms;">
         <div class="flex gap-6 min-w-max">
             {
                 personalProjects.map(project => {

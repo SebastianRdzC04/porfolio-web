@@ -61,6 +61,8 @@ const {
         <ClientRouter />
     </head>
     <body class="text-white">
+        <div class="scroll-progress" data-scroll-progress aria-hidden="true"></div>
+
         <!-- Header en contenedor 70% -->
         <div class="md:w-[70%] w-[92%] mx-auto h-0">
             <Header lang={lang} />
@@ -73,6 +75,8 @@ const {
         <div class="md:w-[70%] w-[92%] mx-auto">
             <slot />
         </div>
+
+        <script src="../scripts/scroll-effects.ts"></script>
     </body>
 </html>
 
