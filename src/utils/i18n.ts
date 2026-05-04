@@ -40,6 +40,15 @@ export function getContentByLanguage<T extends { data: { lang?: Language } }>(
   return items.filter((item) => (item.data.lang || DEFAULT_LANGUAGE) === lang);
 }
 
+// Función para obtener contenido por idioma y, si no existe, usar el idioma base
+export function getContentByLanguageOrFallback<T extends { data: { lang?: Language } }>(
+  items: T[],
+  lang: Language
+): T[] {
+  const localizedItems = getContentByLanguage(items, lang);
+  return localizedItems.length > 0 ? localizedItems : getContentByLanguage(items, DEFAULT_LANGUAGE);
+}
+
 // Función para obtener el slug sin el idioma
 export function getSlugWithoutLang(slug: string): string {
   const parts = slug.split("/");

@@ -1,0 +1,80 @@
+---
+import { getCollection } from 'astro:content';
+import ClientCard from '../compose/ClientCard.astro';
+import { type Language, DEFAULT_LANGUAGE, getContentByLanguage } from '../../utils/i18n';
+import { useTranslations } from '../../utils/translations';
+
+interface Props {
+  lang?: Language;
+}
+
+const { lang = DEFAULT_LANGUAGE } = Astro.props;
+const t = useTranslations(lang);
+const allClients = await getCollection('clients');
+const clients = getContentByLanguage(allClients, lang);
+---
+
+<section id="clients" class="pt-40 pb-14 px-4">
+  <div class="flex flex-col items-center text-center max-w-4xl mx-auto mb-10">
+    <p class="section-kicker mb-4" data-reveal>{t('clients.sectionLabel')}</p>
+    <h3 class="text-[clamp(1.9rem,3.4vw,2.55rem)] leading-tight font-bold text-indigo-300" data-reveal style="--reveal-delay: 80ms;">{t('clients.title')}</h3>
+    <p class="mt-5 text-[clamp(1rem,1.7vw,1.12rem)] leading-relaxed text-gray-300 max-w-3xl" data-reveal style="--reveal-delay: 130ms;">{t('clients.lead')}</p>
+  </div>
+
+  <div class="clients-container overflow-x-auto pb-4" data-reveal style="--reveal-delay: 170ms;">
+    <div class="flex gap-6 min-w-max">
+      {clients.length > 0 ? clients.map((client) => {
+        const { data } = client;
+        const { title, description, imageUrl, path, status, industry } = data;
+        const clientPath = lang === 'es' ? `/clients/${path}` : `/en/clients/${path}`;
+
+        return (
+          <ClientCard
+            title={title}
+            description={description}
+            imageUrl={imageUrl}
+            path={clientPath}
+            status={status}
+            industry={industry}
+            lang={lang}
+          />
+        );
+      }) : (
+        <div class="text-gray-400 py-10">{t('clients.placeholder')}</div>
+      )}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section-kicker {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.3em;
+    font-size: 0.76rem;
+    color: rgba(165, 180, 252, 0.9);
+  }
+
+  .section-kicker::before,
+  .section-kicker::after {
+    content: '';
+    width: 2.25rem;
+    height: 1px;
+    background: rgba(165, 180, 252, 0.35);
+  }
+
+  .clients-container {
+    scrollbar-width: thin;
+  }
+
+  .clients-container::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .clients-container::-webkit-scrollbar-thumb {
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+  }
+</style>

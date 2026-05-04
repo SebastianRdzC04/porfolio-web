@@ -1,0 +1,96 @@
+---
+import { getCollection } from 'astro:content';
+import ClientDocumentCard from '../compose/ClientDocumentCard.astro';
+import { type Language, DEFAULT_LANGUAGE } from '../../utils/i18n';
+import { useTranslations } from '../../utils/translations';
+
+interface Props {
+  clientId: string;
+  lang?: Language;
+}
+
+const { clientId, lang = DEFAULT_LANGUAGE } = Astro.props;
+const t = useTranslations(lang);
+
+const allClients = await getCollection('clients');
+const client = allClients.find((entry) => entry.data.path === clientId && (entry.data.lang || DEFAULT_LANGUAGE) === lang);
+
+const docsCollection = await getCollection('clientDocs');
+const docs = docsCollection
+  .filter((doc) => doc.data.clientPath === clientId && (doc.data.lang || DEFAULT_LANGUAGE) === lang)
+  .sort((a, b) => a.data.order - b.data.order);
+
+const imageSource = client?.data.imageUrl ?? '/projects/elroble.png';
+---
+
+<section class="pt-40 pb-14 px-4 md:px-0">
+  <a href={lang === 'es' ? '/clients' : '/en/clients'} class="inline-flex items-center gap-2 text-indigo-300 hover:text-indigo-200 transition-colors text-sm font-medium" data-reveal>
+    <span>←</span>
+    <span>{t('clients.back')}</span>
+  </a>
+
+  {client ? (
+    <div class="mt-6 grid gap-8 lg:grid-cols-[1.05fr_0.95fr] items-start">
+      <article class="rounded-3xl overflow-hidden border border-indigo-500/15 bg-white/5 backdrop-blur-sm" data-reveal style="--reveal-delay: 70ms;">
+        <div class="relative h-[280px] md:h-[360px]">
+          <img src={imageSource} alt={client.data.title} class="h-full w-full object-cover" />
+          <div class="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent"></div>
+          <div class="absolute bottom-5 left-5 right-5 flex flex-wrap gap-3">
+            <span class="pill">{t('clients.currentTag')}</span>
+            {client.data.industry && <span class="pill">{client.data.industry}</span>}
+            {client.data.status && <span class="pill">{client.data.status}</span>}
+          </div>
+        </div>
+        <div class="p-6 md:p-8">
+          <p class="text-xs uppercase tracking-[0.34em] text-indigo-300/80 mb-3">{t('clients.sectionLabel')}</p>
+          <h1 class="text-[clamp(2rem,4vw,3rem)] font-bold leading-tight text-indigo-100">{client.data.title}</h1>
+          <p class="mt-5 text-[1rem] md:text-[1.06rem] leading-relaxed text-gray-300">{client.data.description}</p>
+          <p class="mt-5 text-[0.98rem] leading-relaxed text-gray-400">{t('clients.detailIntro')}</p>
+        </div>
+      </article>
+
+      <aside class="rounded-3xl border border-indigo-500/15 bg-slate-950/60 p-6 md:p-7" data-reveal style="--reveal-delay: 120ms;">
+        <h2 class="text-[1.35rem] font-semibold text-indigo-200">{t('clients.documentsTitle')}</h2>
+        <p class="mt-3 text-sm leading-relaxed text-gray-400">{t('clients.documentsLead')}</p>
+
+        <div class="mt-6 grid gap-4">
+          {docs.length > 0 ? docs.map((doc) => {
+            const docPath = lang === 'es' ? `/clients/${clientId}/${doc.data.path}` : `/en/clients/${clientId}/${doc.data.path}`;
+
+            return (
+              <ClientDocumentCard
+                title={doc.data.title}
+                description={doc.data.description}
+                docType={doc.data.docType}
+                path={docPath}
+                lang={lang}
+              />
+            );
+          }) : (
+            <p class="text-sm text-gray-400">{t('clients.noDocs')}</p>
+          )}
+        </div>
+      </aside>
+    </div>
+  ) : (
+    <div class="mt-10 rounded-3xl border border-indigo-500/20 bg-indigo-500/5 p-6 text-indigo-100">
+      <h1 class="text-xl font-semibold mb-2">{lang === 'es' ? 'Contenido pendiente' : 'Content pending'}</h1>
+      <p class="text-sm text-gray-300">{t('clients.pending')}</p>
+    </div>
+  )}
+</section>
+
+<style>
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.8rem;
+    border-radius: 999px;
+    background: rgba(15, 23, 42, 0.75);
+    border: 1px solid rgba(129, 140, 248, 0.2);
+    color: #c7d2fe;
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+</style>

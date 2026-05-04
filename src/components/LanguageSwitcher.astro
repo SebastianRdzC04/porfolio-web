@@ -6,9 +6,10 @@ interface Props {
   currentLang: Language;
   currentPath: string;
   translations?: Record<Language, { data: { path?: string } } | undefined>;
+  contentBasePath?: string;
 }
 
-const { currentLang, currentPath, translations } = Astro.props;
+const { currentLang, currentPath, translations, contentBasePath = '/projects' } = Astro.props;
 const t = useTranslations(currentLang);
 
 // Determinar la etiqueta de accesibilidad según el idioma actual
@@ -37,9 +38,8 @@ const ariaLabel = currentLang === 'es' ? 'Cambiar idioma' : 'Change language';
         
         let href: string;
         if (translations && translations[lang]) {
-          // Si tenemos traducciones específicas para proyectos
           const projectPath = translations[lang]?.data?.path;
-          href = lang === 'es' ? `/projects/${projectPath}` : `/en/projects/${projectPath}`;
+          href = lang === 'es' ? `${contentBasePath}/${projectPath}` : `/en${contentBasePath}/${projectPath}`;
         } else {
           // Para páginas generales
           if (currentPath === '/' || currentPath === '/en/') {

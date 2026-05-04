@@ -1,0 +1,47 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../../../layouts/Layout.astro';
+import LanguageSwitcher from '../../../../components/LanguageSwitcher.astro';
+import ClientDocumentPage from '../../../../components/sections/ClientDocumentPage.astro';
+import { DEFAULT_LANGUAGE, type Language } from '../../../../utils/i18n';
+
+export const getStaticPaths = (async () => {
+  const docs = await getCollection('clientDocs');
+
+  return docs
+    .filter((doc) => (doc.data.lang || DEFAULT_LANGUAGE) === DEFAULT_LANGUAGE)
+    .map((doc) => ({
+      params: { clientId: doc.data.clientPath, docId: doc.data.path },
+      props: { clientId: doc.data.clientPath, docId: doc.data.path, lang: 'en' as Language },
+    }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  clientId: string;
+  docId: string;
+  lang: Language;
+}
+
+const { clientId, docId, lang } = Astro.props;
+const allClients = await getCollection('clients');
+const allDocs = await getCollection('clientDocs');
+const client = allClients.find((entry) => entry.data.path === clientId && (entry.data.lang || DEFAULT_LANGUAGE) === lang);
+const document = allDocs.find((entry) => entry.data.clientPath === clientId && entry.data.path === docId && (entry.data.lang || DEFAULT_LANGUAGE) === lang);
+
+const seoTitle = client && document ? `${document.data.title} | ${client.data.title}` : 'Client document | SebasDev';
+const seoDescription = document?.data.description ?? 'Client document';
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Layout title={seoTitle} description={seoDescription} lang={lang} pageUrl={canonicalUrl}>
+  <Fragment slot="head">
+    <link rel="alternate" hreflang="es" href={`https://portfolio.kysedomi.lat/clients/${clientId}/${docId}`} />
+    <link rel="alternate" hreflang="en" href={`https://portfolio.kysedomi.lat/en/clients/${clientId}/${docId}`} />
+    <link rel="alternate" hreflang="x-default" href={`https://portfolio.kysedomi.lat/clients/${clientId}/${docId}`} />
+  </Fragment>
+  <div slot="full">
+    <LanguageSwitcher currentLang={lang} currentPath={Astro.url.pathname} />
+  </div>
+  <ClientDocumentPage clientPath={clientId} client={client} document={document} lang={lang} />
+</Layout>

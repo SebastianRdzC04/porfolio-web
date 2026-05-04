@@ -37,4 +37,30 @@ const about = defineCollection({
   }),
 });
 
-export const collections = { projects, personalProjects, about };
+const clients = defineCollection({
+  loader: glob({ base: "./src/content/clients", pattern: "**/index.md" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string(),
+    imageUrl: z.string().optional(),
+    path: z.string(),
+    status: z.string().optional(),
+    industry: z.string().optional(),
+    lang: z.enum(["es", "en"]).optional(),
+  }),
+});
+
+const clientDocs = defineCollection({
+  loader: glob({ base: "./src/content/clients", pattern: "**/docs/*.md" }),
+  schema: z.object({
+    title: z.string(),
+    description: z.string().optional(),
+    docType: z.string().optional(),
+    order: z.number(),
+    path: z.string(),
+    clientPath: z.string(),
+    lang: z.enum(["es", "en"]).optional(),
+  }),
+});
+
+export const collections = { projects, personalProjects, about, clients, clientDocs };

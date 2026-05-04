@@ -1,0 +1,45 @@
+---
+import type { GetStaticPaths } from 'astro';
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import ClientProfile from '../../components/sections/ClientProfile.astro';
+import { DEFAULT_LANGUAGE, getContentTranslations, type Language } from '../../utils/i18n';
+
+export const getStaticPaths = (async () => {
+  const clients = await getCollection('clients');
+
+  return clients
+    .filter((client) => (client.data.lang || DEFAULT_LANGUAGE) === DEFAULT_LANGUAGE)
+    .map((client) => ({
+      params: { id: client.data.path },
+      props: { clientId: client.data.path, lang: DEFAULT_LANGUAGE as Language },
+    }));
+}) satisfies GetStaticPaths;
+
+interface Props {
+  clientId: string;
+  lang: Language;
+}
+
+const { clientId, lang } = Astro.props;
+const allClients = await getCollection('clients');
+const currentClient = allClients.find((client) => client.data.path === clientId);
+const translations = currentClient ? getContentTranslations(allClients, currentClient.id) : undefined;
+
+const seoTitle = 'Clientes | SebasDev';
+const seoDescription = 'Detalle del cliente, documentos y seguimiento del expediente.';
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
+---
+
+<Layout title={seoTitle} description={seoDescription} lang={lang} pageUrl={canonicalUrl}>
+  <Fragment slot="head">
+    <link rel="alternate" hreflang="es" href={`https://portfolio.kysedomi.lat/clients/${clientId}`} />
+    <link rel="alternate" hreflang="en" href={`https://portfolio.kysedomi.lat/en/clients/${clientId}`} />
+    <link rel="alternate" hreflang="x-default" href={`https://portfolio.kysedomi.lat/clients/${clientId}`} />
+  </Fragment>
+  <div slot="full">
+    <LanguageSwitcher currentLang={lang} currentPath={Astro.url.pathname} translations={translations} contentBasePath="/clients" />
+  </div>
+  <ClientProfile clientId={clientId} lang={lang} />
+</Layout>

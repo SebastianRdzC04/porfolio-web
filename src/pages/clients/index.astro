@@ -1,0 +1,24 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Clients from '../../components/sections/Clients.astro';
+import LanguageSwitcher from '../../components/LanguageSwitcher.astro';
+import { DEFAULT_LANGUAGE, type Language } from '../../utils/i18n';
+
+const currentLang: Language = DEFAULT_LANGUAGE;
+const currentPath = Astro.url.pathname;
+
+const seoTitle = 'Clientes | SebasDev';
+const seoDescription = 'Área de clientes actuales con expedientes, documentos y seguimiento de proyectos.';
+---
+
+<Layout title={seoTitle} description={seoDescription} lang={currentLang} pageUrl="https://portfolio.kysedomi.lat/clients">
+  <Fragment slot="head">
+    <link rel="alternate" hreflang="es" href="https://portfolio.kysedomi.lat/clients" />
+    <link rel="alternate" hreflang="en" href="https://portfolio.kysedomi.lat/en/clients" />
+    <link rel="alternate" hreflang="x-default" href="https://portfolio.kysedomi.lat/clients" />
+  </Fragment>
+  <div slot="full">
+    <LanguageSwitcher currentLang={currentLang} currentPath={currentPath} />
+  </div>
+  <Clients lang={currentLang} />
+</Layout>
