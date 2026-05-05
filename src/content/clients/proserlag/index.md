@@ -1,7 +1,7 @@
 ---
 title: ProSerLag
 description: Oficina de abogados con seguimiento activo del sistema administrativo y de comunicacion.
-imageUrl: /projects/elroble.png
+imageUrl: /proser.png
 path: proserlag
 status: Cliente actual
 industry: Servicios legales
