@@ -6,7 +6,7 @@ import tailwindcss from "@tailwindcss/vite";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://portfolio.kysedomi.lat",
+  site: "https://devas.sbs",
   output: "server",
   adapter: node({
     mode: "standalone",

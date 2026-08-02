@@ -34,9 +34,9 @@ const canonicalUrl = new URL(Astro.url.pathname, Astro.site).href;
 
 <Layout title={seoTitle} description={seoDescription} lang={lang} pageUrl={canonicalUrl}>
   <Fragment slot="head">
-    <link rel="alternate" hreflang="es" href={`https://portfolio.kysedomi.lat/clients/${clientId}`} />
-    <link rel="alternate" hreflang="en" href={`https://portfolio.kysedomi.lat/en/clients/${clientId}`} />
-    <link rel="alternate" hreflang="x-default" href={`https://portfolio.kysedomi.lat/clients/${clientId}`} />
+    <link rel="alternate" hreflang="es" href={`https://devas.sbs/clients/${clientId}`} />
+    <link rel="alternate" hreflang="en" href={`https://devas.sbs/en/clients/${clientId}`} />
+    <link rel="alternate" hreflang="x-default" href={`https://devas.sbs/clients/${clientId}`} />
   </Fragment>
   <div slot="full">
     <LanguageSwitcher currentLang={lang} currentPath={Astro.url.pathname} translations={translations} contentBasePath="/clients" />
