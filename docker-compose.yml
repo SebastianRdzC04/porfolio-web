@@ -4,13 +4,24 @@ services:
       context: .
       dockerfile: Dockerfile
     image: portfolio-web:latest
+    container_name: portfolio-web
     ports:
-      - "2011:80"
+      - "2011:8080"
     networks:
       - portfolio_network
     restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      HOST: 0.0.0.0
+      PORT: 8080
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://127.0.0.1:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
 
 networks:
   portfolio_network:
     name: portfolio_network
-    driver: bridge
+    external: true

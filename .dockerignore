@@ -1,0 +1,58 @@
+# Dependencies
+node_modules
+**/node_modules
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Build artifacts
+dist
+.astro
+**/dist
+**/.astro
+
+# Version control
+.git
+.gitignore
+.gitattributes
+
+# Environment / secrets
+.env
+.env.*
+!.env.example
+
+# IDE / editor
+.vscode
+.idea
+*.swp
+*.swo
+.DS_Store
+
+# Docker files (no se necesitan dentro del contexto copiado)
+# (Se referencian desde fuera, no hacemos COPY de estos)
+Dockerfile
+.dockerignore
+docker-compose.yml
+docker-compose.*.yml
+
+# Docs / archivos no necesarios para build
+README.md
+*.md
+LICENSE
+docs/
+
+# Logs
+logs
+*.log
+
+# Test / coverage
+coverage
+.nyc_output
+**/.cache
+
+# Configuración de agentes/asistentes
+.agents
+.opencode
+skills-lock.json
+opencode.json

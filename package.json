@@ -11,10 +11,13 @@
   "dependencies": {
     "@tailwindcss/vite": "^4.1.12",
     "astro": "^6.1.7",
+    "gray-matter": "^4.0.3",
+    "pdfkit": "^0.19.1",
     "tailwindcss": "^4.1.12",
     "tailwindcss-animated": "^2.0.0"
   },
   "devDependencies": {
+    "@astrojs/node": "^10.1.4",
     "@tailwindcss/typography": "^0.5.16",
     "tailwind-scrollbar": "^4.0.2"
   }
